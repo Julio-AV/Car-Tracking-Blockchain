@@ -4,4 +4,4 @@ class block:
         self.header = header
         self.transactions = transactions
     def calculate_hash(self, header):
-        
+                
