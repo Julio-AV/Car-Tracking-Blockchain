@@ -1,0 +1,13 @@
+networks:
+    docker network ls --> para ver las redes
+    docker network rm {nombre red} --> Borrar red
+    docker network create --subnet={192.168.1.0/24 (por ejemplo)} {nombre}
+
+
+run:
+    docker run --name {nombre} -p {puertoLocal:puertoExterior} -ip {ip} --network {network name} {nombre imagen} --> Crea el contenedor
+    docker start {nombre} --> Despierta un contenedor creado
+
+trabajar con contenedores en general:
+    docker ps -a (ver contenedores incluidos parados)
+    docker rm {nombre contenedor parado}
