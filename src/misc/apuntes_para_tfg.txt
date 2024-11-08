@@ -1,0 +1,3 @@
+Para que se pueda ejecutar sin la necesidad de python3, he tenido que cambiar los permisos del archivo a +x y añadir #!/usr/bin/env python3 
+al principio del archivo.
+
