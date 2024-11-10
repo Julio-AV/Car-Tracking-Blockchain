@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-from subprocess import run
 import argparse
 import ipaddress
 import sys
+from container import Container
+from subprocess import run
+import time
 
 def is_valid_IP(ip):
     try:
@@ -31,25 +33,7 @@ def create_network(starting_ip, network_name, mask = 24):
     if command_output.returncode == 0:
         print(f"A new network has been created at: {subnet} with name {network_name}")
     else:
-        print(f"New network {network_name} couln't be created at {subnet}")
-
-def run_container(name: str, real_port: int, VM_port: int, ip: str, network: str, image_name: str):
-    command = [
-    "docker", "run",
-    "--name", name,         # Container name
-    "-p", f"{str(real_port)}:{str(VM_port)}",         # Port mapping
-    "--ip", ip,     # IP
-    "--network", network,  # Docker nework
-    image_name          # Container image
-    ]
-    print(name)
-    print(f"name: {type(name)} ports {type(real_port)}:{type(VM_port)}, ip: {type(ip)} network: {type(network)}, image: {type(image_name)}")
-    command_output = run(command)
-    if command_output.returncode == 0:
-        print(f"Container {name} with IP {ip} with ports {real_port}{VM_port} lauched succesfully at network {network}")
-    else:
-        raise Exception(f"ERROR LAUNCING CONTAINER {name} with IP {ip} with ports {real_port}:{VM_port} at network {network}")
-        
+        print(f"New network {network_name} couln't be created at {subnet}")      
 
 def handle_args():
     parser = argparse.ArgumentParser(description="Script to launch docker machines to the blockchain")
@@ -61,8 +45,6 @@ def handle_args():
     args = parser.parse_args()
     return args
 
-def stop_container(name):
-    
 # name = "server"
 # real_port = 5000
 # VM_port = 5000
@@ -71,14 +53,19 @@ def stop_container(name):
 # image_name = "imagen_juju"
 # run_container(name, real_port, VM_port, ip, network, image_name)
 if __name__ == '__main__':
-    # args = handle_args()
-    # container_name = args.name
-    # starting_port = args.startingPort
-    # starting_ip = args.startingIP
-    # network = args.network
-    # image_name = args.dockerImage
-    container_list = []
+    args = handle_args()
+    container_name = args.name
+    starting_port = args.startingPort
+    starting_ip = args.startingIP
+    network = args.network
+    image_name = args.dockerImage
+    container = Container(container_name,starting_port, starting_port, starting_ip, network, image_name)
 
     is_valid_IP(starting_ip)
     create_network(starting_ip, network)
-    run_container(container_name,starting_port, starting_port, starting_ip, network, image_name)
+    container.run_container()
+    print("Corrió")
+    time.sleep(10)
+    container.stop_container()
+    container.remove_container()
+    
