@@ -12,7 +12,8 @@ class server:
         client_socket, client_address = self.server_socket.accept()
         self.open_connections[client_address] = client_socket
         print(f"connection stablished with {client_address}")
-        #data = client_socket.recv(1024) #Size of buffer
+
+
     def listen(self, client_socket, client_ip, size = 1024):
         try:
             data = client_socket.recv(size)
@@ -39,12 +40,11 @@ class server:
             print(f"Unexpected error: {e}")
             client_socket.close()
             del self.open_connections[client_ip]
+        return -1
 
 
     def send(self, client_socket, msg):
-        try:
-            client_socket.sendall(msg)
-        except Exception e:
+        client_socket.sendall(msg)
 
 
             
