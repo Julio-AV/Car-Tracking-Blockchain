@@ -11,18 +11,25 @@ class Container:
     def run_container(self, dettached = True):
         
         if dettached:
-            dettached_option = "-d"
+            command = [
+                "docker", "run", "-d",
+                "--name", self.name,         # Container name
+                "-p", f"{str(self.real_port)}:{str(self.VM_port)}",         # Port mapping
+                "--ip", self.ip,     # IP
+                "--network", self.network,  # Docker nework
+                self.image_name          # Container image
+                ]
         else: 
-            dettached_option = ""
+            command = [
+                "docker", "run",
+                "--name", self.name,         # Container name
+                "-p", f"{str(self.real_port)}:{str(self.VM_port)}",         # Port mapping
+                "--ip", self.ip,     # IP
+                "--network", self.network,  # Docker nework
+                self.image_name          # Container image
+                ]
 
-        command = [
-        "docker", "run", dettached_option,
-        "--name", self.name,         # Container name
-        "-p", f"{str(self.real_port)}:{str(self.VM_port)}",         # Port mapping
-        "--ip", self.ip,     # IP
-        "--network", self.network,  # Docker nework
-        self.image_name          # Container image
-        ]
+        
         
         #print(f"name: {type(name)} ports {type(real_port)}:{type(VM_port)}, ip: {type(ip)} network: {type(network)}, image: {type(image_name)}")
         command_output = run(command)
