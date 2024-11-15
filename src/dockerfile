@@ -1,14 +1,14 @@
 FROM ubuntu:20.04
 
-COPY . /app
+COPY  ./comms/* app/
 
 WORKDIR /app
 
-COPY  docker_test_server.py .
+COPY  ./comms/* .
 
 RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     apt-get clean
 
-CMD python3 docker_test_server.py 5000
 
+CMD python3 main.py
