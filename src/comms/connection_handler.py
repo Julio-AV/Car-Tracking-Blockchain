@@ -10,7 +10,10 @@ class Connection_handler:
         self.connections_lock = Lock()
         self.open_connections = {}   #Hashmap where we will store connections as {IP: socket}
 
-
+    def safe_close(self, sock):
+        with self.connections_lock:
+            if not sock._closed:  # Comprueba si el socket ya está cerrado
+                sock.close()
     def remove_connection(self, IP):
         with self.connections_lock:
             del self.open_connections[IP]
@@ -38,6 +41,7 @@ class Connection_handler:
 
 
     def listen(self,  client_ip, size = 1024):
+        
         client_socket = self.open_connections[client_ip]
         try:
             data = client_socket.recv(size)
@@ -46,11 +50,11 @@ class Connection_handler:
                 return data
             else:
                 print("Client closed connection.")
-                client_socket.close()
+                self.safe_close(client_socket)
                 self.remove_connection(client_ip)
         except ConnectionResetError:
             print("Connection was restarted by client, closing socket...")
-            client_socket.close()
+            self.safe_close(client_socket)
             self.remove_connection(client_ip)
 
         except socket.timeout:
@@ -58,11 +62,11 @@ class Connection_handler:
 
         except socket.error as e:
             print(f"Error in socket: {e}")
-            client_socket.close()
+            self.safe_close(client_socket)
             self.remove_connection(client_ip)
         except Exception as e:
             print(f"Unexpected error: {e}")
-            client_socket.close()
+            self.safe_close(client_socket)
             self.remove_connection(client_ip)
         return -1
 
@@ -70,6 +74,14 @@ class Connection_handler:
     def send(self, client_IP, msg):
         client_socket = self.open_connections[client_IP]
         client_socket.sendall(msg.encode())
+    
+    def encode_msg(self, msg):
+        pass
+
+    def broadcast(self, msg):
+        msg = msg.encode()
+        for soc in self.open_connections.values():
+            soc.sendall(msg)
 
 
             
