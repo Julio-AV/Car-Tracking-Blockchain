@@ -76,6 +76,9 @@ class Connection_handler:
         client_socket.sendall(msg.encode())
     
     def encode_msg(self, msg):
+        """
+        Encoding to JSON or whatever type of communication will be using
+        """
         pass
 
     def broadcast(self, msg):
