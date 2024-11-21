@@ -1,4 +1,5 @@
 import ipaddress
+from subprocess import run
 def is_valid_IP(ip):
     try:
         # Intentamos crear un objeto IP utilizando la dirección proporcionada
