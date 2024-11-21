@@ -9,6 +9,9 @@ class Container:
         self.image_name = image_name
     
     def run_container(self, dettached = True):
+        """
+        Creates and runs the container
+        """
         if dettached:
             command = [
                 "docker", "run", "-d",
@@ -39,6 +42,9 @@ class Container:
     
     
     def stop_container(self):
+        """
+        Stops the container
+        """
         command = [
             "docker", "stop",
             self.name
@@ -50,6 +56,10 @@ class Container:
             raise Exception(f"Error stopping container {self.name}")
     
     def remove_container(self):
+        """
+        Removes the container
+        """
+        self.stop_container()
         command = [
             "docker", "rm",
             self.name
@@ -60,12 +70,18 @@ class Container:
         else:
             raise Exception(f"Error removing container {self.name}")
         
-    def copy(self, file, directory):
+    def copy(self, local, docker_dir):
+        """
+        Copies a file or directory to the container
+        """
         command = ["docker", "cp",
-                    file, f"{self.name}:{directory}"]
+                    local, f"{self.name}:{docker_dir}"]
         run(command)
     
     def create(self):
+        """
+        Creates a docker container without running it
+        """
         command = [
                 "docker", "create",
                 "--name", self.name,         # Container name
@@ -79,3 +95,17 @@ class Container:
             print(f"Container {self.name} was created successfuly")
         else:
             raise Exception(f"Error creating container {self.name}")
+        
+    def wake(self, dettached = True):
+        if dettached:
+            command = ["docker", "start",
+                   self.name]
+        else:
+            command = ["docker", "start", "-a",
+                       self.name]
+        
+        command_output = run(command)
+        if command_output.returncode == 0:
+            print(f"Container {self.name} was woken successfuly")
+        else:
+            raise Exception(f"Error waking container {self.name}")
