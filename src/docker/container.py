@@ -9,7 +9,6 @@ class Container:
         self.image_name = image_name
     
     def run_container(self, dettached = True):
-        
         if dettached:
             command = [
                 "docker", "run", "-d",
@@ -60,3 +59,23 @@ class Container:
             print(f"Container {self.name} was removed successfuly")
         else:
             raise Exception(f"Error removing container {self.name}")
+        
+    def copy(self, file, directory):
+        command = ["docker", "cp",
+                    file, f"{self.name}:{directory}"]
+        run(command)
+    
+    def create(self):
+        command = [
+                "docker", "create",
+                "--name", self.name,         # Container name
+                "-p", f"{str(self.real_port)}:{str(self.VM_port)}",         # Port mapping
+                "--ip", self.ip,     # IP
+                "--network", self.network,  # Docker nework
+                self.image_name          # Container image
+                ]
+        command_output = run(command)
+        if command_output.returncode == 0:
+            print(f"Container {self.name} was created successfuly")
+        else:
+            raise Exception(f"Error creating container {self.name}")
