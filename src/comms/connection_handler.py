@@ -1,7 +1,7 @@
 import socket
 from threading import Lock
 class Connection_handler:
-    def __init__(self, port, IP = "0.0.0.0"):
+    def __init__(self, port: int, IP: str = "0.0.0.0"):
         self.port = port 
         self.IP = IP;
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,7 +31,7 @@ class Connection_handler:
 
     def open_connection(self, IP, port):
         with self.connections_lock:
-            if IP not in self.open_connection.keys():
+            if IP not in self.open_connections.keys():
                 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 client_socket.connect((IP, port))
                 self.open_connections[IP] = client_socket
