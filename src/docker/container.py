@@ -53,7 +53,8 @@ class Container:
         if command_output.returncode == 0:
             print(f"Container {self.name} stopped succesfuly")
         else:
-            raise Exception(f"Error stopping container {self.name}")
+            #raise Exception(f"Error stopping container {self.name}")
+            print(f"\033[31mError stopping container {self.name}\033[0m")
     
     def remove_container(self):
         """
@@ -68,7 +69,7 @@ class Container:
         if command_output.returncode == 0:
             print(f"Container {self.name} was removed successfuly")
         else:
-            raise Exception(f"Error removing container {self.name}")
+            print(f"\033[31mError removing container {self.name}\033[0m")
         
     def copy(self, local, docker_dir):
         """
