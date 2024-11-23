@@ -77,7 +77,7 @@ class Connection_handler:
     
     def encode_msg(self, msg):
         """
-        Encoding to JSON or whatever type of communication will be using
+        TODO: Encoding to JSON or whatever type of communication will be using
         """
         pass
 
