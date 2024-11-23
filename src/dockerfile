@@ -10,5 +10,7 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     apt-get clean
 
+#tail is a dummy process so container don't exit once the process is done
+#["python3", "main.py", "&&", "tail", "-f", "/dev/null"]
 
-CMD python3 main.py
+CMD python3 main.py &&  tail -f /dev/null 
