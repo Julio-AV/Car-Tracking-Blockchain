@@ -114,12 +114,15 @@ class Container:
         command = ["docker", "exec", "-it", 
                    self.name, "bash"]
         command_output = run(command)
-        if command_output.returncode == 0:
+        ret_code = command_output.returncode
+        if ret_code == 0:
             print(f"Container {self.name} was controled successfuly")
+        elif ret_code == 127:
+            print(f"\033[31mError executing command in container {self.name}\033[0m")
         else:
             raise Exception(f"Error controling container {self.name}")
         
-        
+
     def wake_and_control(self):
         self.wake()
         self.control()
