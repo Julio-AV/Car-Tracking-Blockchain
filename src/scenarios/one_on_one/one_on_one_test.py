@@ -34,14 +34,17 @@ m_ip = "192.168.3.3"
 m_real_port = 5501
 m_VM_port = 5500
 m_network = "test_network"
-m_image = "socket_image"
-main_path = "scenarios/one_on_one/main.py"
+m_image = "manager_image"
+
+m_test_script = "scenarios/one_on_one/manager_main.py"
+
 m_container = Container(m_name,m_real_port, m_VM_port, m_ip, m_network, m_image)
 m_container.create()
 m_container.copy(main_path, container_main_path)
 m_container.copy(dependencies, container_main_path)
+m_container.copy(m_test_script, container_main_path)
 m_container.wake_and_control()
 
 #Clean containers
 test_container.remove_container()
-m_container.remove_container()
+#m_container.remove_container()
