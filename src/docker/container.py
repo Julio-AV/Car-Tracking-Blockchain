@@ -109,3 +109,34 @@ class Container:
             print(f"Container {self.name} was woken successfuly")
         else:
             raise Exception(f"Error waking container {self.name}")
+        
+    def control(self):
+        command = ["docker", "exec", "-it", 
+                   self.name, "bash"]
+        command_output = run(command)
+        if command_output.returncode == 0:
+            print(f"Container {self.name} was controled successfuly")
+        else:
+            raise Exception(f"Error controling container {self.name}")
+        
+        
+    def wake_and_control(self):
+        self.wake()
+        self.control()
+        
+    
+    def run_and_control(self):
+        """UNTESTED"""
+        command = [
+                "docker", "run", "-it",
+                "--name", self.name,         # Container name
+                "-p", f"{str(self.real_port)}:{str(self.VM_port)}",         # Port mapping
+                "--ip", self.ip,     # IP
+                "--network", self.network,  # Docker nework
+                self.image_name          # Container image
+                ]
+        command_output = run(command)
+        if command_output.returncode == 0:
+            print(f"Container {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} lauched succesfully at network {self.network}")
+        else:
+            raise Exception(f"ERROR LAUNCING CONTAINER {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} at network {self.network}")
