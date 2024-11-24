@@ -10,15 +10,15 @@ class Connection_handler:
         self.connections_lock = Lock()
         self.open_connections = {}   #Hashmap where we will store connections as {IP: socket}
 
-    def safe_close(self, sock: socket.socket):
+    def safe_close(self, sock: socket.socket) -> None:
         with self.connections_lock:
             if not sock._closed:  # Comprueba si el socket ya está cerrado
                 sock.close()
-    def remove_connection(self, IP: str):
+    def remove_connection(self, IP: str) -> None:
         with self.connections_lock:
             del self.open_connections[IP]
 
-    def accept_connection(self):
+    def accept_connection(self) -> None:
         client_socket, client_address = self.server_socket.accept()
         with self.connections_lock:
             if client_address in self.open_connections.keys():
