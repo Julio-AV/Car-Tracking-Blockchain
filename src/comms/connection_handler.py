@@ -10,11 +10,11 @@ class Connection_handler:
         self.connections_lock = Lock()
         self.open_connections = {}   #Hashmap where we will store connections as {IP: socket}
 
-    def safe_close(self, sock):
+    def safe_close(self, sock: socket.socket):
         with self.connections_lock:
             if not sock._closed:  # Comprueba si el socket ya está cerrado
                 sock.close()
-    def remove_connection(self, IP):
+    def remove_connection(self, IP: str):
         with self.connections_lock:
             del self.open_connections[IP]
 
@@ -23,13 +23,11 @@ class Connection_handler:
         with self.connections_lock:
             if client_address in self.open_connections.keys():
                 client_socket.close()
-                return -1
             else:
                 self.open_connections[client_address] = client_socket
                 print(f"connection stablished with {client_address}")
-                return client_address
 
-    def open_connection(self, IP, port):
+    def open_connection(self, IP: str, port: int) -> None:
         with self.connections_lock:
             if IP not in self.open_connections.keys():
                 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,7 +38,7 @@ class Connection_handler:
                 print(f"There is already an open connection with {IP}")
 
 
-    def listen(self,  client_ip, size = 1024):
+    def listen(self,  client_ip: str, size: int = 1024) -> str | int:
         
         client_socket = self.open_connections[client_ip]
         try:
@@ -71,20 +69,21 @@ class Connection_handler:
         return -1
 
 
-    def send(self, client_IP, msg):
+    def send(self, client_IP: str, msg: str) -> None:
         client_socket = self.open_connections[client_IP]
-        client_socket.sendall(msg.encode())
+        encoded_msg = self.encode_msg(msg)
+        client_socket.sendall(encoded_msg)
     
-    def encode_msg(self, msg):
+    def encode_msg(self, msg: str):
         """
         TODO: Encoding to JSON or whatever type of communication will be using
         """
-        pass
+        return msg.encode()
 
-    def broadcast(self, msg):
-        msg = msg.encode()
+    def broadcast(self, msg: str):
+        encoded_msg = self.encode_msg(msg)
         for soc in self.open_connections.values():
-            soc.sendall(msg)
+            soc.sendall(encoded_msg)
 
 
             
