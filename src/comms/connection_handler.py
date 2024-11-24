@@ -45,6 +45,9 @@ class Connection_handler:
             data = client_socket.recv(size)
             if data:
                 print(f"data received: {data.decode('utf-8')}")
+                """
+                TODO: Add producer-consumer relationship
+                """
                 return data
             else:
                 print("Client closed connection.")
@@ -74,13 +77,13 @@ class Connection_handler:
         encoded_msg = self.encode_msg(msg)
         client_socket.sendall(encoded_msg)
     
-    def encode_msg(self, msg: str):
+    def encode_msg(self, msg: str) -> bytes:
         """
         TODO: Encoding to JSON or whatever type of communication will be using
         """
         return msg.encode()
 
-    def broadcast(self, msg: str):
+    def broadcast(self, msg: str) -> None:
         encoded_msg = self.encode_msg(msg)
         for soc in self.open_connections.values():
             soc.sendall(encoded_msg)
