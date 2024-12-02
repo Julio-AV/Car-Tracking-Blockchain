@@ -1,5 +1,7 @@
 import socket
 from threading import Lock
+import logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class Connection_handler:
     def __init__(self, port: int, IP: str = "0.0.0.0"):
         self.port = port 
@@ -25,7 +27,7 @@ class Connection_handler:
                 client_socket.close()
             else:
                 self.open_connections[client_address] = client_socket
-                print(f"connection stablished with {client_address}")
+            print(f"connection stablished with {client_address}")
 
     def open_connection(self, IP: str, port: int) -> None:
         with self.connections_lock:
@@ -35,7 +37,7 @@ class Connection_handler:
                 self.open_connections[IP] = client_socket
                 print(f"connection stablished with {IP}")
             else:
-                print(f"There is already an open connection with {IP}")
+                logging.warning(f"There is already an open connection with {IP}")
 
 
     def listen(self,  client_ip: str, size: int = 1024) -> str | int:

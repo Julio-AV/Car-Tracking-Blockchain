@@ -1,4 +1,6 @@
 from subprocess import run
+import logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class Container:
     def __init__(self, name: str, real_port: int, VM_port: int, ip: str, network: str, image_name: str):
         self.name = name
@@ -7,7 +9,7 @@ class Container:
         self.VM_port = VM_port
         self.network = network
         self.image_name = image_name
-    
+        
     def run_container(self, dettached = True):
         """
         Creates and runs the container
@@ -36,7 +38,7 @@ class Container:
         #print(f"name: {type(name)} ports {type(real_port)}:{type(VM_port)}, ip: {type(ip)} network: {type(network)}, image: {type(image_name)}")
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} lauched succesfully at network {self.network}")
+            logging.info(f"Container {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} lauched succesfully at network {self.network}")
         else:
             raise Exception(f"ERROR LAUNCING CONTAINER {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} at network {self.network}")
     
@@ -51,10 +53,10 @@ class Container:
         ]
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} stopped succesfuly")
+            logging.info(f"Container {self.name} stopped succesfuly")
         else:
             #raise Exception(f"Error stopping container {self.name}")
-            print(f"\033[31mError stopping container {self.name}\033[0m")
+            logging.error(f"Error stopping container {self.name}")
     
     def remove_container(self):
         """
@@ -67,9 +69,9 @@ class Container:
         ]
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} was removed successfuly")
+            logging.info(f"Container {self.name} was removed successfuly")
         else:
-            print(f"\033[31mError removing container {self.name}\033[0m")
+            logging.error(f"Error removing container {self.name}")
         
     def copy(self, local, docker_dir):
         """
@@ -93,7 +95,7 @@ class Container:
                 ]
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} was created successfuly")
+            logging.info(f"Container {self.name} was created successfuly")
         else:
             raise Exception(f"Error creating container {self.name}")
         
@@ -107,7 +109,7 @@ class Container:
         
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} was woken successfuly")
+            logging.info(f"Container {self.name} was woken successfuly")
         else:
             raise Exception(f"Error waking container {self.name}")
         
@@ -119,7 +121,7 @@ class Container:
         if ret_code == 0:
             print(f"Container {self.name} was controled successfuly")
         elif ret_code == 127:
-            print(f"\033[31mError executing command in container {self.name}\033[0m")
+            logging.error(f"Error executing command in container {self.name}")
         else:
             raise Exception(f"Error controling container {self.name}")
         
@@ -141,6 +143,6 @@ class Container:
                 ]
         command_output = run(command)
         if command_output.returncode == 0:
-            print(f"Container {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} lauched succesfully at network {self.network}")
+            logging.info(f"Container {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} lauched succesfully at network {self.network}")
         else:
             raise Exception(f"ERROR LAUNCING CONTAINER {self.name} with IP {self.ip} with ports {self.real_port}:{self.VM_port} at network {self.network}")
