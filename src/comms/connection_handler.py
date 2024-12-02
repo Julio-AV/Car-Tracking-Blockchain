@@ -1,9 +1,11 @@
 import socket
 from threading import Lock
+import queue
 import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class Connection_handler:
-    def __init__(self, port: int, IP: str = "0.0.0.0"):
+    def __init__(self, port: int, data_queue: queue.Queue, IP: str = "0.0.0.0"):
+        self.data_queue = data_queue
         self.port = port 
         self.IP = IP;
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
