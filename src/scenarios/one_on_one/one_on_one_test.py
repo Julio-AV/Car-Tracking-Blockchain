@@ -24,7 +24,7 @@ test_container = Container(tc_name,tc_real_port, tc_VM_port, tc_ip, tc_network, 
 test_container.create()
 test_container.copy(main_path, container_main_path)
 test_container.copy(dependencies, container_main_path)
-test_container.wake()
+test_container.wake(dettached=False)
 
 
 
