@@ -1,7 +1,9 @@
 import socket
 from threading import Lock
+import threading
 import queue
 import logging
+from typing import Union
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class Connection_handler:
     def __init__(self, port: int, data_queue: queue.Queue, IP: str = "0.0.0.0"):
@@ -12,7 +14,7 @@ class Connection_handler:
         self.server_socket.bind((self.IP, self.port))
         self.server_socket.listen()
         self.connections_lock = Lock()
-        self.open_connections = {}   #Hashmap where we will store connections as {IP: socket}
+        self.open_connections = {}   #Dictionary that stores connections as {IP: socket}
 
     def safe_close(self, sock: socket.socket) -> None:
         with self.connections_lock:
@@ -22,15 +24,16 @@ class Connection_handler:
         with self.connections_lock:
             del self.open_connections[IP]
 
-    def accept_connection(self) -> None:
+    def accept_connection(self) -> Union[str, int]:
         client_socket, client_address = self.server_socket.accept()
         with self.connections_lock:
             if client_address in self.open_connections.keys():
                 client_socket.close()
             else:
                 self.open_connections[client_address] = client_socket
+                return client_address
             print(f"connection stablished with {client_address}")
-
+        return -1
     def open_connection(self, IP: str, port: int) -> None:
         with self.connections_lock:
             if IP not in self.open_connections.keys():
@@ -42,7 +45,7 @@ class Connection_handler:
                 logging.warning(f"There is already an open connection with {IP}")
 
 
-    def listen(self,  client_ip: str, size: int = 1024) -> str | int:
+    def listen(self,  client_ip: str, size: int = 1024) -> Union[str , int]:
         
         client_socket = self.open_connections[client_ip]
         try:
@@ -92,5 +95,15 @@ class Connection_handler:
         for soc in self.open_connections.values():
             soc.sendall(encoded_msg)
 
+
+    def start(self):
+        """
+        When the handler opens a connection, it will start a thread to listen to that connection
+        """
+        while True:
+            ip = self.accept_connection() 
+            if ip != -1:
+                listener = threading.Thread(target=self.listen, args=ip)
+                listener.start()
 
             
