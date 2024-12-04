@@ -12,7 +12,7 @@ class Connection_handler:
         self.IP = IP;
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((self.IP, self.port))
-        self.server_socket.listen()
+        self.server_socket.listen(5)
         self.connections_lock = Lock()
         self.open_connections = {}   #Dictionary that stores connections as {IP: socket}
 
@@ -25,15 +25,22 @@ class Connection_handler:
             del self.open_connections[IP]
 
     def accept_connection(self) -> Union[str, int]:
+        with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write("Waiting to accept connection...\n")  # Escribir una línea
         client_socket, client_address = self.server_socket.accept()
+        client_address: str = client_address[0] #We only need the IP
         with self.connections_lock:
             if client_address in self.open_connections.keys():
                 client_socket.close()
             else:
                 self.open_connections[client_address] = client_socket
+                
+                with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write(f"Connection accepted with {client_address}!\n")  # Escribir una línea
                 return client_address
             print(f"connection stablished with {client_address}")
         return -1
+    
     def open_connection(self, IP: str, port: int) -> None:
         with self.connections_lock:
             if IP not in self.open_connections.keys():
@@ -46,15 +53,17 @@ class Connection_handler:
 
 
     def listen(self,  client_ip: str, size: int = 1024) -> Union[str , int]:
-        
+        """
+        TODO: LISTEN SOLO ESCUCHA UNA VEZ, HAY QUE METERLE UN BUCLE
+        """
+        with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write("Im inside listen\n")  # Escribir una línea
         client_socket = self.open_connections[client_ip]
         try:
             data = client_socket.recv(size)
             if data:
                 print(f"data received: {data.decode('utf-8')}")
-                """
-                TODO: Add producer-consumer relationship
-                """
+                self.data_queue.put(data)
                 return data
             else:
                 print("Client closed connection.")
@@ -100,10 +109,19 @@ class Connection_handler:
         """
         When the handler opens a connection, it will start a thread to listen to that connection
         """
-        while True:
-            ip = self.accept_connection() 
-            if ip != -1:
-                listener = threading.Thread(target=self.listen, args=ip)
-                listener.start()
+        accepter = threading.Thread(target=self.accept_and_launch)
+        accepter.start()
+        with open("mi_archivo.txt", "w") as archivo:
+                    archivo.write("Thread launched to accept_and_lauch\n")  # Escribir una línea
+        
 
-            
+    def accept_and_launch(self):
+        #while True:
+        ip = self.accept_connection() 
+        if ip != -1:
+            listener = threading.Thread(target=self.listen, args=(ip,))
+            listener.start()
+            # Abrir un archivo en modo escritura ('w')
+            with open("mi_archivo.txt", "a") as archivo:
+                archivo.write(f"launched listener to ip {ip}\n")  # Escribir una línea
+
