@@ -52,23 +52,21 @@ class Connection_handler:
                 logging.warning(f"There is already an open connection with {IP}")
 
 
-    def listen(self,  client_ip: str, size: int = 1024) -> Union[str , int]:
+    def listen(self,  client_ip: str, size: int = 1024):
         """
-        TODO: LISTEN SOLO ESCUCHA UNA VEZ, HAY QUE METERLE UN BUCLE
+        This function listens to a socket until it is closed
         """
-        with open("mi_archivo.txt", "a") as archivo:
-                    archivo.write("Im inside listen\n")  # Escribir una línea
         client_socket = self.open_connections[client_ip]
         try:
-            data = client_socket.recv(size)
-            if data:
-                print(f"data received: {data.decode('utf-8')}")
-                self.data_queue.put(data)
-                return data
-            else:
-                print("Client closed connection.")
-                self.safe_close(client_socket)
-                self.remove_connection(client_ip)
+            while client_ip in self.open_connections.keys():
+                data = client_socket.recv(size)
+                if data:
+                    print(f"data received: {data.decode('utf-8')}")
+                    self.data_queue.put(data)   #No need to decode the data since our data_handler will do it
+                else:
+                    print("Client closed connection.")
+                    self.safe_close(client_socket)
+                    self.remove_connection(client_ip)
         except ConnectionResetError:
             print("Connection was restarted by client, closing socket...")
             self.safe_close(client_socket)
@@ -85,7 +83,6 @@ class Connection_handler:
             print(f"Unexpected error: {e}")
             self.safe_close(client_socket)
             self.remove_connection(client_ip)
-        return -1
 
 
     def send(self, client_IP: str, msg: str) -> None:
