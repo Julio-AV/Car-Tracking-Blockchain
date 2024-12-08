@@ -16,12 +16,17 @@ class Connection_handler:
         self.connections_lock = Lock()
         self.open_connections = {}   #Dictionary that stores connections as {IP: socket}
 
-    def safe_close(self, sock: socket.socket) -> None:
+    def safe_close(self, client_addr: str) -> None:
+        sock = self.open_connections[client_addr]
         with self.connections_lock:
             if not sock._closed:  # Comprueba si el socket ya está cerrado
                 sock.close()
+
     def remove_connection(self, IP: str) -> None:
         with self.connections_lock:
+            sock = self.open_connections[IP]
+            if not sock._closed:
+                sock.close()
             del self.open_connections[IP]
 
     def accept_connection(self) -> Union[str, int]:
@@ -52,24 +57,21 @@ class Connection_handler:
                 logging.warning(f"There is already an open connection with {IP}")
 
 
-    def listen(self,  client_ip: str, size: int = 1024):
+    def listen_once(self,  client_ip: str, size: int = 1024):
         """
-        This function listens to a socket until it is closed
+        This function listens to a socket once
         """
         client_socket = self.open_connections[client_ip]
         try:
-            while client_ip in self.open_connections.keys():
-                data = client_socket.recv(size)
-                if data:
-                    print(f"data received: {data.decode('utf-8')}")
-                    self.data_queue.put(data)   #No need to decode the data since our data_handler will do it
-                else:
-                    print("Client closed connection.")
-                    self.safe_close(client_socket)
-                    self.remove_connection(client_ip)
+            data = client_socket.recv(size)
+            if data:
+                print(f"data received: {data.decode('utf-8')}")
+                self.data_queue.put(data)   #No need to decode the data since our data_handler will do it
+            else:
+                print("Client closed connection.")
+                self.remove_connection(client_ip)
         except ConnectionResetError:
             print("Connection was restarted by client, closing socket...")
-            self.safe_close(client_socket)
             self.remove_connection(client_ip)
 
         except socket.timeout:
@@ -77,12 +79,18 @@ class Connection_handler:
 
         except socket.error as e:
             print(f"Error in socket: {e}")
-            self.safe_close(client_socket)
             self.remove_connection(client_ip)
         except Exception as e:
             print(f"Unexpected error: {e}")
-            self.safe_close(client_socket)
             self.remove_connection(client_ip)
+
+    def listen(self, client_ip: str, size: int = 1024):
+        """
+        This function listen to a socket until it gets closed
+        """
+        while client_ip in self.open_connections.keys():
+            self.listen_once(client_ip)
+        print(f"Connection with {client_ip} was closed")
 
 
     def send(self, client_IP: str, msg: str) -> None:
@@ -113,12 +121,12 @@ class Connection_handler:
         
 
     def accept_and_launch(self):
-        #while True:
-        ip = self.accept_connection() 
-        if ip != -1:
-            listener = threading.Thread(target=self.listen, args=(ip,))
-            listener.start()
-            # Abrir un archivo en modo escritura ('w')
-            with open("mi_archivo.txt", "a") as archivo:
-                archivo.write(f"launched listener to ip {ip}\n")  # Escribir una línea
+        while True:
+            ip = self.accept_connection() 
+            if ip != -1:
+                listener = threading.Thread(target=self.listen, args=(ip,))
+                listener.start()
+                # Abrir un archivo en modo escritura ('w')
+                with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write(f"launched listener to ip {ip}\n")  # Escribir una línea
 
