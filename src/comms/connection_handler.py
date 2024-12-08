@@ -105,6 +105,9 @@ class Connection_handler:
         return msg.encode()
 
     def broadcast(self, msg: str) -> None:
+        """
+        Send a message to all open sockets
+        """
         encoded_msg = self.encode_msg(msg)
         for soc in self.open_connections.values():
             soc.sendall(encoded_msg)
