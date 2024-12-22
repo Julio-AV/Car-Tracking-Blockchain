@@ -48,12 +48,24 @@ class Connection_handler:
     
     def open_connection(self, IP: str, port: int) -> None:
         with self.connections_lock:
-            if IP not in self.open_connections.keys():
-                client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                client_socket.settimeout(5)  #Keep an eye on this timeout, it might lock other processes from getting access
-                client_socket.connect((IP, port))
-                self.open_connections[IP] = client_socket
-                print(f"connection stablished with {IP}")
+            if IP not in self.open_connections:
+                try:
+                    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    client_socket.settimeout(5)  # Set a timeout of 5 seconds
+                    client_socket.connect((IP, port))
+                    self.open_connections[IP] = client_socket
+                    print(f"Connection established with {IP}")
+                    self.launch(IP) #Listen to the connection
+
+                except socket.timeout:
+                    logging.error(f"Connection attempt to {IP} timed out.")
+                except ConnectionRefusedError:
+                    logging.error(f"Connection to {IP} was refused. The server may not be accepting connections.")
+                except OSError as e:
+                    logging.error(f"An error occurred while trying to connect to {IP}: {e}")
+                except Exception as e:
+                    logging.error(f"Unexpected error when connecting to {IP}: {e}")
+
             else:
                 logging.warning(f"There is already an open connection with {IP}")
 
@@ -62,7 +74,8 @@ class Connection_handler:
         Open multiple connections from a list
         """
         for IP in IPs:
-            self.open_connection(IP, ports)
+            if IP != self.IP:
+                self.open_connection(IP, ports)
 
     def listen_once(self,  client_ip: str, size: int = 1024):
         """
@@ -129,14 +142,18 @@ class Connection_handler:
         with open("mi_archivo.txt", "w") as archivo:
                     archivo.write("Thread launched to accept_and_lauch\n")  # Escribir una línea
         
-
+    def launch(self, IP: str):
+        """
+        When the handler opens a connection, it will start a thread to listen to that connection
+        """
+        listener = threading.Thread(target=self.listen, args=(ip,))
+        listener.start()
+        
     def accept_and_launch(self):
         while True:
             ip = self.accept_connection() 
             if ip != -1:
-                listener = threading.Thread(target=self.listen, args=(ip,))
-                listener.start()
+                self.launch(ip)
                 # Abrir un archivo en modo escritura ('w')
                 with open("mi_archivo.txt", "a") as archivo:
                     archivo.write(f"launched listener to ip {ip}\n")  # Escribir una línea
-
