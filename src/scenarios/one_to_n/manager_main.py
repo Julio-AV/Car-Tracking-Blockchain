@@ -12,11 +12,15 @@ if __name__ == "__main__":
     IPs = global_data_utils.read_list_from_csv(IPs_path)
     handler.open_multiple_connections(IPs)
     time.sleep(2)
-    handler.send(machine_IP, "Soldiers! Do you hear me?")
+    handler.broadcast("Soldiers! Do you hear me?")
     print("Data sent")
-    handler.listen_once(machine_IP)
-    handler.send(machine_IP, "Positions, now!")
+    for i in IPs:
+        data = handler.data_queue.get()
+        print(f"{data}_{i}")
+    handler.broadcast( "Positions, now!")
     print("Second data sent")
-    handler.listen_once(machine_IP)
+    for i in IPs:
+        data = handler.data_queue.get()
+        print(f"{data}_{i}")
     for IP in handler.open_connections.keys():
         handler.safe_close(IP)
