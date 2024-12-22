@@ -110,7 +110,7 @@ class Connection_handler:
         """
         while client_ip in self.open_connections.keys():
             self.listen_once(client_ip)
-        print(f"Connection with {client_ip} was closed")
+        logging.warning(f"Connection with {client_ip} was closed")
 
 
     def send(self, client_IP: str, msg: str) -> None:
