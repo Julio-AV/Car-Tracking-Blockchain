@@ -50,12 +50,19 @@ class Connection_handler:
         with self.connections_lock:
             if IP not in self.open_connections.keys():
                 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                client_socket.settimeout(5)  #Keep an eye on this timeout, it might lock other processes from getting access
                 client_socket.connect((IP, port))
                 self.open_connections[IP] = client_socket
                 print(f"connection stablished with {IP}")
             else:
                 logging.warning(f"There is already an open connection with {IP}")
 
+    def open_multiple_connections(self, IPs: list, ports = 5500):
+        """
+        Open multiple connections from a list
+        """
+        for IP in IPs:
+            self.open_connection(IP, ports)
 
     def listen_once(self,  client_ip: str, size: int = 1024):
         """
