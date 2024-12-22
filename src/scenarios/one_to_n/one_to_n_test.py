@@ -1,3 +1,7 @@
+"""
+Script designed to generate a 1 to n fully connected network where the manager container will be controlled by the user
+"""
+
 import os
 import sys
 import time
@@ -7,7 +11,7 @@ sys.path.insert(0, src_dir) #We need this lines to be able to use docker package
 from docker import Container
 from docker import create_network
 import utils.global_data_utils as global_data_utils
-DEPENDENCIES = "comms"
+DEPENDENCIES_PATH = "comms"
 CONTAINER_MAIN_PATH = "/app/"
 N_TC = 2    #Number of autonomous containers
 TC_BASE_NAME = "one_to_n_auto_"
@@ -33,7 +37,7 @@ for i in range(N_TC):
     test_container = Container(current_tc_name, current_tc_real_port, TC_VM_PORT, current_IP, NETWORK, TC_IMAGE)
     test_container.create()
     test_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)  #Copy file that will be executed once the container wakes
-    test_container.copy(DEPENDENCIES, CONTAINER_MAIN_PATH)  #Copy the dependencies
+    test_container.copy(DEPENDENCIES_PATH, CONTAINER_MAIN_PATH)  #Copy the dependencies
     test_container.copy(IP_FILE, CONTAINER_MAIN_PATH)  #Copy the files with the IPs that the container will connect to
     test_container.wake(dettached=True)
     container_list.append(test_container)
@@ -41,19 +45,19 @@ for i in range(N_TC):
     last_IP_digit += 1
 
 
-m_name = "manager"
-m_ip = "192.168.4.2"
-m_real_port = 5501
-m_VM_port = 5500
-m_image = "manager_image"   #This dockerfile is in one_on_one path
+M_NAME = "manager"
+M_IP = "192.168.4.2"
+m_real_port = current_tc_real_port
+M_VM_PORT = 5500
+M_IMAGE = "manager_image"   #This dockerfile is in one_on_one path, so build the image before using it
 
-m_test_script = "scenarios/one_to_n/manager_main.py"
+M_TEST_SCRIPT_PATH = "scenarios/one_to_n/manager_main.py"
 
-m_container = Container(m_name,m_real_port, m_VM_port, m_ip, NETWORK, m_image)
+m_container = Container(M_NAME,m_real_port, M_VM_PORT, M_IP, NETWORK, M_IMAGE)
 m_container.create()
 m_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)
-m_container.copy(DEPENDENCIES, CONTAINER_MAIN_PATH)
-m_container.copy(m_test_script, MAIN_PATH)
+m_container.copy(DEPENDENCIES_PATH, CONTAINER_MAIN_PATH)
+m_container.copy(M_TEST_SCRIPT_PATH, MAIN_PATH)
 m_container.wake_and_control()
 
 
