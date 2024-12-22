@@ -26,7 +26,9 @@ TC_IMAGE = "socket_image"
 MAIN_PATH = "scenarios/one_to_n/main.py"
 IP_FILE = "IPs.csv"
 IPs = [TC_BASE_NAME + str(i) for i in range(N_TC)]
+
 global_data_utils.write_list_to_csv(IP_FILE, IPs)
+
 create_network(TC_IP + "0", NETWORK)
 
 container_list = []
@@ -53,14 +55,16 @@ M_IMAGE = "manager_image"   #This dockerfile is in one_on_one path, so build the
 
 M_TEST_SCRIPT_PATH = "scenarios/one_to_n/manager_main.py"
 
-m_container = Container(M_NAME,m_real_port, M_VM_PORT, M_IP, NETWORK, M_IMAGE)
+m_container = Container(M_NAME, m_real_port, M_VM_PORT, M_IP, NETWORK, M_IMAGE)
 m_container.create()
 m_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)
 m_container.copy(DEPENDENCIES_PATH, CONTAINER_MAIN_PATH)
 m_container.copy(M_TEST_SCRIPT_PATH, MAIN_PATH)
 m_container.wake_and_control()
 
-
+#Cleanup
 for container in container_list:
     container.remove_container()
+
+global_data_utils.delete_file(IP_FILE)
 
