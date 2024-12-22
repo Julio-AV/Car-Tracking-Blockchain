@@ -6,7 +6,7 @@ print(f"Path added to sys.path: {src_dir}")
 sys.path.insert(0, src_dir) #We need this lines to be able to use docker package
 from docker import Container
 from docker import create_network
-
+import utils.global_data_utils as global_data_utils
 DEPENDENCIES = "comms"
 CONTAINER_MAIN_PATH = "/app/"
 N_TC = 2    #Number of autonomous containers
@@ -20,18 +20,21 @@ TC_VM_PORT = 5500
 NETWORK = "one_to_n_network"
 TC_IMAGE = "socket_image"
 MAIN_PATH = "scenarios/one_to_n/main.py"
-
+IP_FILE = "IPs.csv"
+IPs = [TC_BASE_NAME + str(i) for i in range(N_TC)]
+global_data_utils.write_list_to_csv(IP_FILE, IPs)
 create_network(TC_IP + "0", NETWORK)
 
 container_list = []
 
 for i in range(N_TC):
     current_tc_name = TC_BASE_NAME + str(i)
-    current_IP = TC_IP + str(last_IP_digit)
+    current_IP = IPs[i]
     test_container = Container(current_tc_name, current_tc_real_port, TC_VM_PORT, current_IP, NETWORK, TC_IMAGE)
     test_container.create()
-    test_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)
-    test_container.copy(DEPENDENCIES, CONTAINER_MAIN_PATH)
+    test_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)  #Copy file that will be executed once the container wakes
+    test_container.copy(DEPENDENCIES, CONTAINER_MAIN_PATH)  #Copy the dependencies
+    test_container.copy(IP_FILE, CONTAINER_MAIN_PATH)  #Copy the files with the IPs that the container will connect to
     test_container.wake(dettached=True)
     container_list.append(test_container)
     current_tc_real_port +=1
@@ -42,7 +45,7 @@ m_name = "manager"
 m_ip = "192.168.4.2"
 m_real_port = 5501
 m_VM_port = 5500
-m_image = "manager_image"
+m_image = "manager_image"   #This dockerfile is in one_on_one path
 
 m_test_script = "scenarios/one_to_n/manager_main.py"
 
@@ -53,7 +56,7 @@ m_container.copy(DEPENDENCIES, CONTAINER_MAIN_PATH)
 m_container.copy(m_test_script, MAIN_PATH)
 m_container.wake_and_control()
 
-time.sleep(3)
+
 for container in container_list:
     container.remove_container()
 
