@@ -53,7 +53,7 @@ class Connection_handler:
                 try:
                     logging.info(f"Trying to connect to {IP}")
                     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    client_socket.settimeout(5)  # Set a timeout of 5 seconds (this timeout is applied to every aspect of the connection)
+                    #client_socket.settimeout(5)  # Set a timeout of 5 seconds (this timeout is applied to every aspect of the connection)
                     print("Intento conectar")
                     client_socket.connect((IP, port))
                     print("Conectado")
