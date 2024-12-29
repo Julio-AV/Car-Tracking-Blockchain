@@ -17,7 +17,7 @@ if __name__ == "__main__":
     for i in IPs:
         data = handler.data_queue.get()
         print(f"{data}_{i}")
-    handler.broadcast( "Positions, now!")
+    handler.broadcast("Positions, now!")
     print("Second data sent")
     for i in IPs:
         data = handler.data_queue.get()

@@ -9,11 +9,9 @@ if __name__ == "__main__":
     IPs_path = "IPs.csv"
     IPs = global_data_utils.read_list_from_csv(IPs_path)
     handler.open_multiple_connections(IPs)
-    handler.data_queue.get()    #First manager opening message
+    data = handler.data_queue.get()    #First manager opening message
     handler.broadcast("Yes, sir!")
-    for i in range(len(handler.open_connections.keys)):
+    for i in range(len(handler.open_connections.keys())):
         #Receive data from all connections
         handler.data_queue.get()
-    with open("mi_archivo.txt", "a") as archivo:
-                    archivo.write("Sending last msg\n")  # Escribir una línea
     handler.broadcast("On position, sir!")
