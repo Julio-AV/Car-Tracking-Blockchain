@@ -1,1 +1,6 @@
-- Test one to n script
+- Test one to n script with more nodes
+- Fix auto connection <-- Not needed, but it would be nice fixing it
+- Add timeout for hosts that don't exist  
+
+- Start implementing the blockchain <-- Next step, good luck
+- Complete data_handler <-- Along with blockchain
