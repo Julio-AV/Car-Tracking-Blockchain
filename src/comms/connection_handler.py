@@ -24,10 +24,11 @@ class Connection_handler:
 
     def remove_connection(self, IP: str) -> None:
         with self.connections_lock:
-            sock = self.open_connections[IP]
-            if not sock._closed:
-                sock.close()
-            del self.open_connections[IP]
+            if IP in self.open_connections.keys():
+                sock = self.open_connections[IP]
+                if not sock._closed:
+                    sock.close()
+                del self.open_connections[IP]
 
     def accept_connection(self) -> Union[str, int]:
         with open("mi_archivo.txt", "a") as archivo:
@@ -50,10 +51,14 @@ class Connection_handler:
         with self.connections_lock:
             if IP not in self.open_connections:
                 try:
+                    logging.info(f"Trying to connect to {IP}")
                     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    client_socket.settimeout(5)  # Set a timeout of 5 seconds
+                    client_socket.settimeout(5)  # Set a timeout of 5 seconds (this timeout is applied to every aspect of the connection)
+                    print("Intento conectar")
                     client_socket.connect((IP, port))
+                    print("Conectado")
                     self.open_connections[IP] = client_socket
+                    print("añado conexion")
                     print(f"Connection established with {IP}")
                     self.launch(IP) #Listen to the connection
 
@@ -75,6 +80,8 @@ class Connection_handler:
         """
         for IP in IPs:
             if IP != self.IP:
+                logging.info(f"Opening connection with {IP}")
+                
                 self.open_connection(IP, ports)
 
     def listen_once(self,  client_ip: str, size: int = 1024):
@@ -94,11 +101,16 @@ class Connection_handler:
             print("Connection was restarted by client, closing socket...")
             self.remove_connection(client_ip)
 
-        except socket.timeout:
+        except socket.timeout as e:
+            print(e)
             print("Connection timed out while receiving data")
 
         except socket.error as e:
-            print(f"Error in socket: {e}")
+            if e.errno == 9:  # Errno 9: Bad file descriptor
+                print("Socket closed. Exiting listener thread...")
+            else:
+                print(f"Error in socket: {e}")
+
             self.remove_connection(client_ip)
         except Exception as e:
             print(f"Unexpected error: {e}")
@@ -146,13 +158,14 @@ class Connection_handler:
         """
         When the handler opens a connection, it will start a thread to listen to that connection
         """
-        listener = threading.Thread(target=self.listen, args=(ip,))
+        listener = threading.Thread(target=self.listen, args=(IP,))
         listener.start()
         
     def accept_and_launch(self):
         while True:
             ip = self.accept_connection() 
             if ip != -1:
+                logging.info(f"Connection accepted with {ip}, launching listener")
                 self.launch(ip)
                 # Abrir un archivo en modo escritura ('w')
                 with open("mi_archivo.txt", "a") as archivo:
