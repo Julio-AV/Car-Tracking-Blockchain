@@ -4,3 +4,7 @@
 
 - Start implementing the blockchain <-- Next step, good luck
 - Complete data_handler <-- Along with blockchain
+
+
+Blockchain:
+    Define the transactions
