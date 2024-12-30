@@ -10,5 +10,10 @@ class Transaction(ABC):
 
     @abstractmethod
     def validate(self):
-        """Validar los datos específicos de la transacción"""
+        """Validate the data of the transaction"""
+        pass
+
+    @abstractmethod
+    def serialize(self):
+        """Serialize the transaction to send to the network through the socket connections"""
         pass

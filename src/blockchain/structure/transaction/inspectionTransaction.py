@@ -6,3 +6,8 @@ class InspectionTransaction(transaction):
         self.kilometes = kilometes
 
     def validate(self):
+        pass
+
+    def serialize():
+        pass
+    

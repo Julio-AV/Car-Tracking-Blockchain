@@ -7,3 +7,6 @@ class AccidentTransaction(transaction):
         self.severity = severity
 
     def validate(self):
+
+    def serialize():
+        pass

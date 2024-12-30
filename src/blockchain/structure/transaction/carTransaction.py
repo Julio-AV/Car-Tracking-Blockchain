@@ -8,3 +8,7 @@ class CarTransaction(transaction):
 
     def validate(self):
         """TODO: Implemente function"""
+        pass
+
+    def serialize():
+        pass
