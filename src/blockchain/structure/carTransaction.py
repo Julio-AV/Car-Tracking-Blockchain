@@ -9,7 +9,8 @@ class CarTransaction(Transaction):
     def validate(self):
         """TODO: Implement function"""
         pass
-
+    
+    
 
     def _as_dict(self):
         """Return the transaction as a dictionary"""
@@ -39,3 +40,4 @@ if __name__ == '__main__':
         car_id="car123"
     )
     print(example_transaction.serialize())
+    print(example_transaction.calculate_hash())
