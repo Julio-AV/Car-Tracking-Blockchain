@@ -14,7 +14,7 @@ class Block:
         while len(transaction_hashes) > 1:
             if len(transaction_hashes) % 2 != 0:
                 transaction_hashes.append(transaction_hashes[-1])
-            transaction_hashes = [sha256(transaction_hashes[i].encode() + transaction_hashes[i + 1].encode()).hexdigest() for i in range(0, len(transaction_hashes), 2)]
+            transaction_hashes = [sha256((transaction_hashes[i] + transaction_hashes[i + 1]).encode()).hexdigest() for i in range(0, len(transaction_hashes), 2)]
         self.header.merkle_root = transaction_hashes[0] # Add merkle root to block header
         return transaction_hashes[0]
             
