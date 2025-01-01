@@ -10,5 +10,17 @@ class AccidentTransaction(transaction):
     
     def validate(self, blockchain):
         pass
-    def serialize():
-        pass
+
+    
+    def _as_dict(self):
+        return {
+            "transaction_type": self.transaction_type,
+            "transaction_hash": self.transaction_hash,
+            "emitter": self.emitter,
+            "event": self.event,
+            "timestamp": self.timestamp,
+            "signature": self.signature,
+            "car_id": self.car_id,
+            "driver_id": self.driver_id,
+            "severity": self.severity
+        }

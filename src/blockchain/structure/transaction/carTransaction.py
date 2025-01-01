@@ -1,5 +1,4 @@
 from transaction import Transaction
-import json
 class CarTransaction(Transaction):
     def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, old_owner, new_owner, car_id):
         super().__init__(transaction_type, transaction_hash, emitter, event, timestamp, signature)
@@ -26,9 +25,6 @@ class CarTransaction(Transaction):
             "car_id": self.car_id
         }
     
-    def serialize(self):
-        """Return the transaction as a JSON string to send over the network"""
-        return json.dumps(self._as_dict())
         
 if __name__ == '__main__':
     example_transaction = CarTransaction(
