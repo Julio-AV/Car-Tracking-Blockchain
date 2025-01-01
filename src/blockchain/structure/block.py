@@ -1,17 +1,16 @@
-import blockchain.structure.header as header
+from header import Header
 from transaction import Transaction
-from transaction import CarTransaction
-from transaction import InspectionTransaction
-from transaction import AccidentTransaction
 
 class Block:
-    def __init__(self, header: header, transactions: list[Transaction]):
+    def __init__(self, header: Header, transactions: list[Transaction]):
         self.header = header
         self.transactions = transactions
     
     def calculate_merkle_root(self):
         for transaction in self.transactions:
+            pass
 
             
     def calculate_hash(self):
-        block_data = f"{self.previous_hash}{ pass}"
+        block_data = f"{self.previous_hash}"
+        pass

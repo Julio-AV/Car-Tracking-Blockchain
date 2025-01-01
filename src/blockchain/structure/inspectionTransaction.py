@@ -1,5 +1,5 @@
 from transaction import Transaction
-from structure.block import Block
+from block import Block
 import json
 class InspectionTransaction(Transaction):
     def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, car_id, kilometers):
