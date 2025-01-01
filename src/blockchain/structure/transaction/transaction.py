@@ -7,13 +7,12 @@ class Transaction(ABC):
         self.event = event
         self.timestamp = timestamp
         self.signature = signature
-
+    
     @abstractmethod
     def validate(self):
         """Validate the data of the transaction"""
-        pass
 
     @abstractmethod
     def serialize(self):
         """Serialize the transaction to send to the network through the socket connections"""
-        pass
+        

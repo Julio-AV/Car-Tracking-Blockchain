@@ -1,5 +1,5 @@
 import hashlib
-class header:
+class Header:
     def __init__(self, current_hash, previous_hash, time_stamp, block_number ,validator_sign):
         self.current_hash = None
         self.merkle_root = None
