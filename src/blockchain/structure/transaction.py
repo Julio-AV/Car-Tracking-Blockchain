@@ -13,10 +13,6 @@ class Transaction(ABC):
     @abstractmethod
     def validate(self):
         """Validate the data of the transaction"""
-    
-    @abstractmethod
-    def calculate_hash(self):
-        """Calculate the hash of the transaction"""
 
     @abstractmethod
     def _as_dict(self):
