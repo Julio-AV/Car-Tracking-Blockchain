@@ -1,6 +1,6 @@
 from transaction import Transaction
 import json
-class AccidentTransaction(transaction):
+class AccidentTransaction(Transaction):
     def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, car_id, driver_id, severity):
         super().__init__(transaction_type, transaction_hash, emitter, event, timestamp, signature)
         self.car_id = car_id
@@ -11,7 +11,7 @@ class AccidentTransaction(transaction):
     def validate(self, blockchain):
         pass
 
-    
+
     def _as_dict(self):
         return {
             "transaction_type": self.transaction_type,
@@ -24,3 +24,16 @@ class AccidentTransaction(transaction):
             "driver_id": self.driver_id,
             "severity": self.severity
         }
+if __name__ == '__main__':
+    example_transaction = AccidentTransaction(
+        transaction_type="accident",
+        transaction_hash="abc123",
+        emitter="user1",
+        event="car_accident",
+        timestamp="2023-10-01T12:00:00Z",
+        signature="signature123",
+        car_id="car123",
+        driver_id="driver123",
+        severity="high"
+    )
+    print(example_transaction.serialize())

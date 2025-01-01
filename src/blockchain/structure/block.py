@@ -1,10 +1,11 @@
 import blockchain.structure.header as header
-from blockchain.structure.transaction.transaction import Transaction
-from blockchain.structure.transaction.carTransaction import CarTransaction
-from blockchain.structure.transaction.inspectionTransaction import InspectionTransaction
-from blockchain.structure.transaction.accidentTransaction import AccidentTransaction
+from transaction import Transaction
+from transaction import CarTransaction
+from transaction import InspectionTransaction
+from transaction import AccidentTransaction
+
 class Block:
-    def __init__(self, header: header, transactions: list[transaction]):
+    def __init__(self, header: header, transactions: list[Transaction]):
         self.header = header
         self.transactions = transactions
     

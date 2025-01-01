@@ -1,12 +1,13 @@
 from transaction import Transaction
+from structure.block import Block
 import json
-class InspectionTransaction(transaction):
+class InspectionTransaction(Transaction):
     def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, car_id, kilometers):
         super().__init__(transaction_type, transaction_hash, emitter, event, timestamp, signature)
         self.car_id = car_id
         self.kilometers = kilometers
     
-    def validate(self):
+    def validate(self, blockchain: list[Block]):
         pass
 
     def _as_dict(self):
@@ -21,4 +22,16 @@ class InspectionTransaction(transaction):
             "kilometers": self.kilometers
         }
         
+if __name__ == '__main__':
+    example_transaction = InspectionTransaction(
+        transaction_type="inspection",
+        transaction_hash="abc123",
+        emitter="user1",
+        event="car_inspection",
+        timestamp="2023-10-01T12:00:00Z",
+        signature="signature123",
+        car_id="car123",
+        kilometers="10000"
+    )
+    print(example_transaction.serialize())
     
