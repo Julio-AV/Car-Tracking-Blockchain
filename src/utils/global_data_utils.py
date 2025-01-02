@@ -66,3 +66,4 @@ if __name__ == "__main__":
     data = read_list_from_csv(file_name)
     print(data)
     delete_file(file_name)
+    
