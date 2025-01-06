@@ -3,11 +3,10 @@ from hashlib import sha256
 import json
 from datetime import datetime
 class Transaction(ABC):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, signature):
-        self.transaction_type = transaction_type
+    def __init__(self, transaction_hash, emitter, signature):
+        self.transaction_type = None
         self.transaction_hash = transaction_hash
         self.emitter = emitter
-        self.event = event
         self.timestamp = self.get_timestamp()
         self.signature = signature
     

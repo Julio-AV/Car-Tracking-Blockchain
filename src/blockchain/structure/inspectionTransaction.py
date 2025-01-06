@@ -1,9 +1,10 @@
-from transaction import Transaction
-from block import Block
+from .transaction import Transaction
+from .block import Block
 import json
 class InspectionTransaction(Transaction):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, signature, car_id, kilometers):
-        super().__init__(transaction_type, transaction_hash, emitter, event, signature)
+    def __init__(self, transaction_hash, emitter, signature, car_id, kilometers):
+        super().__init__(transaction_hash, emitter, signature)
+        self.transaction_type = "inspection"
         self.car_id = car_id
         self.kilometers = kilometers
     
@@ -15,7 +16,6 @@ class InspectionTransaction(Transaction):
             "transaction_type": self.transaction_type,
             "transaction_hash": self.transaction_hash,
             "emitter": self.emitter,
-            "event": self.event,
             "timestamp": self.timestamp,
             "signature": self.signature,
             "car_id": self.car_id,
@@ -24,10 +24,8 @@ class InspectionTransaction(Transaction):
         
 if __name__ == '__main__':
     example_transaction = InspectionTransaction(
-        transaction_type="inspection",
         transaction_hash="abc123",
         emitter="user1",
-        event="car_inspection",
         signature="signature123",
         car_id="car123",
         kilometers="10000"

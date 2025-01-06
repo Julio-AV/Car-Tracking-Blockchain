@@ -1,5 +1,5 @@
-from header import Header
-from transaction import Transaction
+from .header import Header
+from .transaction import Transaction
 from hashlib import sha256
 
 class Block:
@@ -35,37 +35,28 @@ class Block:
         self.transactions.append(transaction)
 
 if __name__ == '__main__':
-    from inspectionTransaction import InspectionTransaction
-    from accidentTransaction import AccidentTransaction
-    from carTransaction import CarTransaction
+    from .inspectionTransaction import InspectionTransaction
+    from .accidentTransaction import AccidentTransaction
+    from .carTransaction import CarTransaction
     """Example of how to calculate the merkle root of a block"""
     inspection = InspectionTransaction(
-        transaction_type="inspection",
         transaction_hash="abc123",
         emitter="user1",
-        event="car_inspection",
-        timestamp="2023-10-01T12:00:00Z",
         signature="signature123",
         car_id="car123",
         kilometers="10000"
     )    
     accident = AccidentTransaction(
-        transaction_type="accident",
         transaction_hash="abc123",
         emitter="user1",
-        event="car_accident",
-        timestamp="2023-10-01T12:00:00Z",
         signature="signature123",
         car_id="car123",
         driver_id="driver123",
         severity="high"
     )
     car = CarTransaction(
-        transaction_type="transfer",
         transaction_hash="abc123",
         emitter="user1",
-        event="car_sale",
-        timestamp="2023-10-01T12:00:00Z",
         signature="signature123",
         old_owner="user1",
         new_owner="user2",
@@ -80,5 +71,5 @@ if __name__ == '__main__':
         )
     block = Block(header=example_header, transactions=transactions)
     block.prepare_block()
-    print(block.header.merkle_root)
+    #print(block.header.merkle_root)
     print(block.header.block_hash)

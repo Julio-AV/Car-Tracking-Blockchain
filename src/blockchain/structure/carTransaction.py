@@ -1,7 +1,8 @@
-from transaction import Transaction
+from .transaction import Transaction
 class CarTransaction(Transaction):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, signature, old_owner, new_owner, car_id):
-        super().__init__(transaction_type, transaction_hash, emitter, event, signature)
+    def __init__(self, transaction_hash, emitter, signature, old_owner, new_owner, car_id):
+        super().__init__( transaction_hash, emitter, signature)
+        self.transaction_type = "transfer"
         self.old_owner = old_owner
         self.new_owner = new_owner
         self.car_id = car_id
@@ -18,7 +19,6 @@ class CarTransaction(Transaction):
             "transaction_type": self.transaction_type,
             "transaction_hash": self.transaction_hash,
             "emitter": self.emitter,
-            "event": self.event,
             "timestamp": self.timestamp,
             "signature": self.signature,
             "old_owner": self.old_owner,
@@ -29,10 +29,8 @@ class CarTransaction(Transaction):
         
 if __name__ == '__main__':
     example_transaction = CarTransaction(
-        transaction_type="transfer",
         transaction_hash="abc123",
         emitter="user1",
-        event="car_sale",
         signature="signature123",
         old_owner="user1",
         new_owner="user2",
