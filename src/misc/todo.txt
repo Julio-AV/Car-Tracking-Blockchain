@@ -8,6 +8,7 @@ Connection handler:
 
 
 Blockchain:
-    Define the transactions --> Serialize them: JSON | str, and verify them
-    Define block structure: Transactions list, merkle root of transactions 
-    Define header: Calculate merkle root of transactions, and block hash to prepare for broadcasting
+    Serialize block
+    Block factory🦕
+    Transaction factory🦕
+    Complete transaction validation
