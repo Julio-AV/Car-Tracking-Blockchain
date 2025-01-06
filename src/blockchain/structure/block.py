@@ -19,11 +19,16 @@ class Block:
         return transaction_hashes[0]
             
 
-
-            
     def calculate_hash(self):
-        block_data = f"{self.previous_hash}"
-        pass
+        serialized_header = f"{self.header.previous_hash}{self.header.time_stamp}{self.header.block_number}{self.header.validator_sign}{self.header.merkle_root}"
+        block_hash = sha256(serialized_header.encode()).hexdigest()
+        self.header.block_hash = block_hash # Add hash to block
+        return block_hash
+
+    def prepare_block(self):
+        """Prepare the block for broadcasting by calculating its hash and merkle root"""
+        self.calculate_merkle_root()
+        self.calculate_hash()
 
     def add_transaction(self, transaction: Transaction):
         """Add a transaction to the block (pertinent checks will be done in the data handler)"""
@@ -74,4 +79,6 @@ if __name__ == '__main__':
             validator_sign="validator_signature_example"
         )
     block = Block(header=example_header, transactions=transactions)
-    print(block.calculate_merkle_root())
+    block.prepare_block()
+    print(block.header.merkle_root)
+    print(block.header.block_hash)
