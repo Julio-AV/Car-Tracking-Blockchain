@@ -1,7 +1,7 @@
 from transaction import Transaction
 class CarTransaction(Transaction):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, old_owner, new_owner, car_id):
-        super().__init__(transaction_type, transaction_hash, emitter, event, timestamp, signature)
+    def __init__(self, transaction_type, transaction_hash, emitter, event, signature, old_owner, new_owner, car_id):
+        super().__init__(transaction_type, transaction_hash, emitter, event, signature)
         self.old_owner = old_owner
         self.new_owner = new_owner
         self.car_id = car_id
@@ -33,7 +33,6 @@ if __name__ == '__main__':
         transaction_hash="abc123",
         emitter="user1",
         event="car_sale",
-        timestamp="2023-10-01T12:00:00Z",
         signature="signature123",
         old_owner="user1",
         new_owner="user2",

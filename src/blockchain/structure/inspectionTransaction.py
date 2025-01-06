@@ -2,8 +2,8 @@ from transaction import Transaction
 from block import Block
 import json
 class InspectionTransaction(Transaction):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature, car_id, kilometers):
-        super().__init__(transaction_type, transaction_hash, emitter, event, timestamp, signature)
+    def __init__(self, transaction_type, transaction_hash, emitter, event, signature, car_id, kilometers):
+        super().__init__(transaction_type, transaction_hash, emitter, event, signature)
         self.car_id = car_id
         self.kilometers = kilometers
     
@@ -28,10 +28,10 @@ if __name__ == '__main__':
         transaction_hash="abc123",
         emitter="user1",
         event="car_inspection",
-        timestamp="2023-10-01T12:00:00Z",
         signature="signature123",
         car_id="car123",
         kilometers="10000"
     )
     print(example_transaction.serialize())
+    print(example_transaction.calculate_hash())
     

@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
 from hashlib import sha256
 import json
+from datetime import datetime
 class Transaction(ABC):
-    def __init__(self, transaction_type, transaction_hash, emitter, event, timestamp, signature):
+    def __init__(self, transaction_type, transaction_hash, emitter, event, signature):
         self.transaction_type = transaction_type
         self.transaction_hash = transaction_hash
         self.emitter = emitter
         self.event = event
-        self.timestamp = timestamp
+        self.timestamp = self.get_timestamp()
         self.signature = signature
     
     @abstractmethod
@@ -25,4 +26,11 @@ class Transaction(ABC):
     def calculate_hash(self):
         """Calculate the hash of the transaction"""
         return sha256(self.serialize().encode()).hexdigest()
-        
+
+    def get_timestamp(self):
+        """Get the current timestamp"""
+        current_date = datetime.now()
+        date_format = "%d/%m/%Y %H:%M:%S"
+        formatted_date = current_date.strftime(date_format)
+        return formatted_date
+    
