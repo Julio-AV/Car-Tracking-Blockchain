@@ -3,13 +3,13 @@ Connection handler:
     - Fix auto connection <-- Not needed, but it would be nice fixing it
     - Add timeout for hosts that don't exist  
 
-- Start implementing the blockchain <-- Current step
+- Implementing the blockchain <-- Current step
 - Complete data_handler <-- After blockchain
-
+- Complete semi-connected network scenario
+- Complete realistic scenario
 
 Blockchain:
     Serialize block
-    Block factory🦕
-    Transaction factory🦕
+    Block factory🦕  --> Not needed?
     Complete transaction validation
-    Automate timestamp on block header
+    Complete block validation
