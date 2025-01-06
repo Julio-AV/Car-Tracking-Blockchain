@@ -12,3 +12,4 @@ Blockchain:
     Block factory🦕
     Transaction factory🦕
     Complete transaction validation
+    Automate timestamp on block header
