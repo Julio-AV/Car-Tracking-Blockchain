@@ -3,8 +3,8 @@ Connection handler:
     - Fix auto connection <-- Not needed, but it would be nice fixing it
     - Add timeout for hosts that don't exist  
 
-- Start implementing the blockchain <-- Next step, good luck
-- Complete data_handler <-- Along with blockchain
+- Start implementing the blockchain <-- Current step
+- Complete data_handler <-- After blockchain
 
 
 Blockchain:
