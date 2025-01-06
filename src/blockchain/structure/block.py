@@ -1,7 +1,7 @@
 from .header import Header
 from .transaction import Transaction
 from hashlib import sha256
-
+from datetime import datetime   
 class Block:
     def __init__(self, header: Header, transactions: list[Transaction]):
         self.header = header
@@ -20,19 +20,37 @@ class Block:
             
 
     def calculate_hash(self):
+        """Calculate and set the hash of the block"""
         serialized_header = f"{self.header.previous_hash}{self.header.time_stamp}{self.header.block_number}{self.header.validator_sign}{self.header.merkle_root}"
         block_hash = sha256(serialized_header.encode()).hexdigest()
         self.header.block_hash = block_hash # Add hash to block
         return block_hash
 
+    def set_timestamp(self):
+        """Get the current timestamp"""
+        current_date = datetime.now()
+        date_format = "%d/%m/%Y %H:%M:%S"
+        formatted_date = current_date.strftime(date_format)
+        self.header.time_stamp = formatted_date
+        return formatted_date
+    
     def prepare_block(self):
-        """Prepare the block for broadcasting by calculating its hash and merkle root"""
+        """Prepare the block for broadcasting by calculating its hash, merkle root and timestamp"""
         self.calculate_merkle_root()
         self.calculate_hash()
+        self.set_timestamp()
 
     def add_transaction(self, transaction: Transaction):
         """Add a transaction to the block (pertinent checks will be done in the data handler)"""
         self.transactions.append(transaction)
+
+    def validate(self):
+        """Validate the block"""
+        pass
+    
+    def serialize(self):
+        """Serialize the block to send to the network through the socket connections"""
+        pass
 
 if __name__ == '__main__':
     from .inspectionTransaction import InspectionTransaction
@@ -65,11 +83,11 @@ if __name__ == '__main__':
     transactions = [inspection, accident, car]
     example_header = Header(
             previous_hash="0000000000000000000769f8a8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8",
-            time_stamp="2023-10-01 12:00:00",
             block_number=1,
             validator_sign="validator_signature_example"
         )
     block = Block(header=example_header, transactions=transactions)
     block.prepare_block()
-    #print(block.header.merkle_root)
+    print(block.header.merkle_root)
     print(block.header.block_hash)
+    print(block.header.time_stamp)
