@@ -13,3 +13,12 @@ Blockchain:
     Block factory🦕  --> Not needed?
     Complete transaction validation
     Complete block validation
+
+Data handler:
+    Once you receive a block, keep in mind it will have to be broadcasted, 
+        which will be done by a thread that's communicated with the data handler by a queue,
+        so, the data handler will put a transaction/block on the queue if he hasn't stored it yet, which means that if 
+        the transaction or block is already stored, it means that is was received previously, which means that it should not be
+        broadcasted.
+        
+    Keep in mind that we need to differentiate block receiving with transaction receiving. 
