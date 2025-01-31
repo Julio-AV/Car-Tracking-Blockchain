@@ -3,12 +3,12 @@ from hashlib import sha256
 import json
 from datetime import datetime
 class Transaction(ABC):
-    def __init__(self, transaction_hash, emitter, signature):
-        self.transaction_type = None
-        self.transaction_hash = transaction_hash
+    def __init__(self, emitter, signature_private_key):
+        #Transaction type is handled by subclasses
         self.emitter = emitter
         self.timestamp = self.get_timestamp()
-        self.signature = signature
+        self.transaction_hash = self.calculate_hash()
+        self.signature = None #TODO: Complete automatic signature
     
     @abstractmethod
     def validate(self):
@@ -17,6 +17,16 @@ class Transaction(ABC):
     @abstractmethod
     def _as_dict(self):
         """Return the transaction as a dictionary"""
+
+    @abstractmethod
+    def _get_transaction_main_data(self):
+        """Return the main data of the transaction as a dictionary, used to calculate the hash of the transaction"""
+
+    
+    def prepare_transaction(self):
+        """Prepare the transaction to be sent to the network"""
+        # Calculate the hash of the transaction
+        # Sign the transaction
         
     def serialize(self):
         """Serialize the transaction to send to the network through the socket connections"""
@@ -24,7 +34,8 @@ class Transaction(ABC):
     
     def calculate_hash(self):
         """Calculate the hash of the transaction"""
-        return sha256(self.serialize().encode()).hexdigest()
+        dumps = json.dumps(self._get_transaction_main_data())
+        return sha256(dumps.encode()).hexdigest()
 
     def get_timestamp(self):
         """Get the current timestamp"""
@@ -33,3 +44,7 @@ class Transaction(ABC):
         formatted_date = current_date.strftime(date_format)
         return formatted_date
     
+    def sign(self, private_key):
+        """Sign the transaction with the private key"""
+        signature = private_key.sign()
+        self.signature = signature
