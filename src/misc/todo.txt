@@ -9,10 +9,12 @@ Connection handler:
 - Complete realistic scenario
 
 Blockchain:
+    Complete transaction signing
+    Complete block signing
     Serialize block
-    Block factory🦕  --> Not needed?
     Complete transaction validation
     Complete block validation
+
 
 Data handler:
     Once you receive a block, keep in mind it will have to be broadcasted, 
