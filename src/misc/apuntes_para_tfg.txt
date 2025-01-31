@@ -8,3 +8,11 @@ Probar IA para monitorización de red
 Mencionar consumo energético de la blockchain
 
 Max 50 páginas
+
+Como funcionan las firmas digitales:
+    1️⃣ Se crea la transacción con los datos (remitente, destinatario, monto).
+    2️⃣ Se genera un hash (SHA-256) de la transacción.
+    3️⃣ Se firma el hash con la clave privada → Esto genera la firma digital.
+    4️⃣ Se envía la transacción firmada a la red.
+    5️⃣ Los nodos verifican la firma con la clave pública del remitente.
+    6️⃣ Si el hash desencriptado de la firma coincide con el hash de la transacción, ✅ es válida y se añade a la blockchain.
