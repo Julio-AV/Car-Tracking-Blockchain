@@ -6,14 +6,16 @@ from cryptography.exceptions import InvalidSignature
 import json
 from datetime import datetime
 class Transaction(ABC):
-    def __init__(self, emitter,  signature = None):
+    def __init__(self, emitter, new_transaction = True):
         #Transaction type is handled by subclasses
-        #If signature is None, then we are creating a new transaction -> we need to sign it
-        #If signature is not None, then we are receiving a transaction -> we need to validate it
+        #New transaction will be true if we are creating a transaction and false if we are deserializing a transaction from the network
         self.emitter = emitter
-        self.timestamp = self.get_timestamp()
-        self.transaction_hash = self.calculate_hash()
-        self.signature = signature # Signature of the transaction 
+        if new_transaction:
+            self.timestamp = self.get_timestamp()
+            self.transaction_hash = self.calculate_hash()
+        else:
+            self.timestamp = None
+            self.transaction_hash = None
     
     @abstractmethod
     def validate(self, blockchain):

@@ -2,11 +2,11 @@ from .transaction import Transaction
 from .block import Block
 import json
 class InspectionTransaction(Transaction):
-    def __init__(self, emitter, car_id, kilometers):
+    def __init__(self, emitter, car_id, kilometers, new_transaction=True):
         self.transaction_type = "inspection"
         self.car_id = car_id
         self.kilometers = kilometers
-        super().__init__(emitter)
+        super().__init__(emitter, new_transaction=new_transaction)
     
     def validate(self, blockchain: list[Block]):
         pass
@@ -34,6 +34,7 @@ if __name__ == '__main__':
     #python3 -m blockchain.structure.inspectionTransaction
     from cryptography.hazmat.primitives.asymmetric import rsa, padding
     from cryptography.hazmat.primitives import hashes
+    from ..transactionFactory import TransactionFactory
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048
@@ -47,3 +48,11 @@ if __name__ == '__main__':
     example_transaction.prepare_transaction(private_key)
     print(example_transaction.serialize())
     print(example_transaction.validate_signature(public_key))
+
+    #Test for serialization and deserialization
+    serialized = example_transaction.serialize()
+    recovered_transaction = TransactionFactory.create_transaction(serialized)
+    print(recovered_transaction.serialize())
+    print(recovered_transaction.validate_signature(public_key))
+
+    

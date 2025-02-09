@@ -1,11 +1,11 @@
 from .transaction import Transaction
 class CarTransaction(Transaction):
-    def __init__(self, emitter, old_owner, new_owner, car_id):
+    def __init__(self, emitter, old_owner, new_owner, car_id, new_transaction=True):
         self.transaction_type = "transfer"
         self.old_owner = old_owner
         self.new_owner = new_owner
         self.car_id = car_id
-        super().__init__(emitter)
+        super().__init__(emitter, new_transaction=new_transaction)
     
     def validate(self):
         """TODO: Implement function"""
@@ -43,6 +43,7 @@ if __name__ == '__main__':
     #python3 -m blockchain.structure.carTransaction
     from cryptography.hazmat.primitives.asymmetric import rsa, padding
     from cryptography.hazmat.primitives import hashes
+    from ..transactionFactory import TransactionFactory
     import json
     private_key = rsa.generate_private_key(
         public_exponent=65537,
@@ -60,10 +61,6 @@ if __name__ == '__main__':
 
     #Test for serialization and deserialization
     serialized = example_transaction.serialize()
-    serialized = json.loads(serialized)
-    recovered_transaction = CarTransaction(emitter=serialized["emitter"], old_owner=serialized["old_owner"], new_owner=serialized["new_owner"], car_id=serialized["car_id"])
-    recovered_transaction.signature = serialized["signature"]
-    recovered_transaction.timestamp = serialized["timestamp"]
-    recovered_transaction.transaction_hash = serialized["transaction_hash"]
+    recovered_transaction = TransactionFactory.create_transaction(serialized)
     print(recovered_transaction.serialize())
     print(recovered_transaction.validate_signature(public_key))
