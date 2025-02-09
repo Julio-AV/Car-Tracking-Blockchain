@@ -60,6 +60,7 @@ if __name__ == '__main__':
     print(example_transaction.validate_signature(public_key))
 
     #Test for serialization and deserialization
+    print("\nTransaction after deserialization **********************************************\n")
     serialized = example_transaction.serialize()
     recovered_transaction = TransactionFactory.create_transaction(serialized)
     print(recovered_transaction.serialize())
