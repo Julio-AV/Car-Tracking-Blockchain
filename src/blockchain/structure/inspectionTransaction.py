@@ -31,9 +31,19 @@ class InspectionTransaction(Transaction):
         }
         
 if __name__ == '__main__':
+    #python3 -m blockchain.structure.inspectionTransaction
+    from cryptography.hazmat.primitives.asymmetric import rsa, padding
+    from cryptography.hazmat.primitives import hashes
+    private_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048
+    )
+    public_key = private_key.public_key()
     example_transaction = InspectionTransaction(
         emitter="user1",
         car_id="car123",
         kilometers="10000"
     )
+    example_transaction.prepare_transaction(private_key)
     print(example_transaction.serialize())
+    print(example_transaction.validate_signature(public_key))

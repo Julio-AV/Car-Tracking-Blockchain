@@ -14,7 +14,7 @@ class Transaction(ABC):
         self.emitter = emitter
         self.timestamp = self.get_timestamp()
         self.transaction_hash = self.calculate_hash()
-        self.signature = signature # Signature of the transaction
+        self.signature = signature # Signature of the transaction 
     
     @abstractmethod
     def validate(self):
@@ -30,7 +30,7 @@ class Transaction(ABC):
 
     
     def prepare_transaction(self, private_key):
-        """Prepare the transaction to be sent to the network"""
+        """Prepare the transaction to be sent to the network, currently just a wrapper for sign"""
         # Sign the transaction
         self.sign(private_key)
         
@@ -61,7 +61,6 @@ class Transaction(ABC):
     
     def validate_signature(self, public_key):
         """Validate the signature of the transaction"""
-        
         try:
             signature_bytes = bytes.fromhex(self.signature)
             public_key.verify(signature_bytes, self.transaction_hash.encode(),
