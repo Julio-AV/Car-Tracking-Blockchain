@@ -25,6 +25,10 @@ Data handler:
         
     Keep in mind that we need to differentiate block receiving with transaction receiving. 
 
+Simulations:
+    Adapt and test current simulations with blockchain implemented simulation
+    Create semi-connected scenario
+    Create realistic scenario simulation
 
 Possible errors and debugging:
     Add python output redirecting on docker machines to keep record of traces
