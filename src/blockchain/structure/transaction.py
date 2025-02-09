@@ -5,7 +5,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.exceptions import InvalidSignature
 import json
 from datetime import datetime
-import logging
 class Transaction(ABC):
     def __init__(self, emitter,  signature = None):
         #Transaction type is handled by subclasses
@@ -17,7 +16,7 @@ class Transaction(ABC):
         self.signature = signature # Signature of the transaction 
     
     @abstractmethod
-    def validate(self):
+    def validate(self, blockchain):
         """Validate the data of the transaction"""
 
     @abstractmethod
@@ -33,10 +32,17 @@ class Transaction(ABC):
         """Prepare the transaction to be sent to the network, currently just a wrapper for sign"""
         # Sign the transaction
         self.sign(private_key)
-        
+    
+    
     def serialize(self):
         """Serialize the transaction to send to the network through the socket connections"""
         return json.dumps(self._as_dict())
+    
+    @staticmethod
+    def deserialize(self, serialized_transaction):
+        """Deserialize the transaction to receive from the network through the socket connections"""
+        transaction_dict = json.loads(serialized_transaction)
+        return transaction_dict
     
     def calculate_hash(self):
         """Calculate the hash of the transaction"""
