@@ -24,3 +24,8 @@ Data handler:
         broadcasted.
         
     Keep in mind that we need to differentiate block receiving with transaction receiving. 
+
+
+Possible errors and debugging:
+    Add python output redirecting on docker machines to keep record of traces
+    Possible error decoding digital sign after sending through sockets
