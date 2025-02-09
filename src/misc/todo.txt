@@ -9,10 +9,10 @@ Connection handler:
 - Complete realistic scenario
 
 Blockchain:
-    Complete transaction signing
+    Complete transaction signing - done
+    Complete transaction validation
     Complete block signing
     Serialize block
-    Complete transaction validation
     Complete block validation
 
 
