@@ -28,3 +28,16 @@ class Header:
     
     def serialize(self):
         return json.dumps(self._as_dict())
+    
+
+    def __str__(self):
+        return (
+            "==================== Block Header ====================\n"
+            f"| Block Hash:      {self.block_hash}\n"
+            f"| Merkle Root:     {self.merkle_root}\n"
+            f"| Previous Hash:   {self.previous_hash}\n"
+            f"| Time Stamp:      {self.time_stamp}\n"
+            f"| Block Number:    {self.block_number}\n"
+            f"| Validator Sign:  {self.validator_sign}\n"
+            "======================================================"
+        )

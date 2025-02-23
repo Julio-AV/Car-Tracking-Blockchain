@@ -88,8 +88,40 @@ class Block:
     def serialize(self):
         """Serialize the block to send to the network through the socket connections"""
         return json.dumps(self._as_dict())
+    
+    def pretty_print(self):
+        """Print the block in a structured, visually appealing way"""
+        width = 100  # Ancho total del bloque
+        padding = 20  # Espaciado para alinear bien las claves y valores
+
+        print("+" + "-" * (width - 1) + "+")
+        print("|" + " " * ((width // 2) - 3) + "BLOCK" + " " * ((width // 2) - 3) + "|")
+        print("+" + "-" * (width - 1) + "+")
+
+        print(f"| {'Block Number:':<{padding}} {self.header.block_number:<{width - padding - 4}} |")
+        print(f"| {'Previous Hash:':<{padding}} {self.header.previous_hash:<{width - padding - 4}} |")
+        print(f"| {'Merkle Root:':<{padding}} {self.header.merkle_root:<{width - padding - 4}} |")
+        print(f"| {'Timestamp:':<{padding}} {self.header.time_stamp:<{width - padding - 4}} |")
+        print(f"| {'Block Hash:':<{padding}} {self.header.block_hash:<{width - padding - 4}} |")
+        print(f"| {'Validator Signature:':<{padding}} {self.header.validator_sign[:width - padding - 7]}... |")
+
+        print("+" + "-" * (width - 1) + "+")
+        print("| Transactions:" + " " * (width - 15) + "|")
+
+        for transaction in self.transactions:
+            transaction.signature = transaction.signature[:20] + "..."  # Truncate signature
+            serialized_tx = transaction.serialize()
+            for i in range(0, len(serialized_tx), width - 7):
+                print(f"| - {serialized_tx[i:i + width - 5]:<{width - 5}} |")
+            print("|" + " " * (width - 1) + "|")  # Empty line between transactions
+
+        print("+" + "-" * (width-1) + "+")
+
+
+
 
 if __name__ == '__main__':
+    #python -m blockchain.structure.block
     from .inspectionTransaction import InspectionTransaction
     from .accidentTransaction import AccidentTransaction
     from .carTransaction import CarTransaction
@@ -138,4 +170,4 @@ if __name__ == '__main__':
     transaction_list = [inspection_example, accident_example, car_transaction]
     block = Block("0", 1, transaction_list)
     block.prepare_block(block_owner_key)    
-    print(block.header.serialize())
+    block.pretty_print()
