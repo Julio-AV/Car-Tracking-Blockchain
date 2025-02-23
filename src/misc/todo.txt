@@ -9,10 +9,7 @@ Connection handler:
 - Complete realistic scenario
 
 Blockchain:
-    Complete transaction signing - done
     Complete transaction validation
-    Complete block signing
-    Serialize block
     Complete block validation
 
 
@@ -26,6 +23,7 @@ Data handler:
     Keep in mind that we need to differentiate block receiving with transaction receiving. 
 
 Simulations:
+    Create blockchain key management
     Adapt and test current simulations with blockchain implemented simulation
     Create semi-connected scenario
     Create realistic scenario simulation
