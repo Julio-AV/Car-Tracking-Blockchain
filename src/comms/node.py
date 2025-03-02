@@ -14,4 +14,6 @@ class Node:
         self.connection_handler = ConnectionHandler(self.port, self.queue_from_connectionHandler, self.queue_to_connectionHandler)
         self.queue_to_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (dataHandler is the producer, and node is the consumer)
         self.queue_from_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (Node is the producer, and dataHandler is the consumer)
-
+        self.data_handler = DataHandler(self.queue_from_dataHandler, self.queue_to_dataHandler)
+        #TODO: start connection_handler and data_handler
+    

@@ -21,6 +21,8 @@ Data handler:
         
     Keep in mind that we need to differentiate block receiving with transaction receiving. 
 
+    Validate signature, but first you need to create the keys
+
 Connection_handler:
     - Add queue to transfer broadcasting data from data_handler
 Simulations:
