@@ -4,6 +4,7 @@ This class is in charge of accepting and refusing data transfers, it will have t
 import queue
 import multiprocessing
 from blockchain.transactionFactory import TransactionFactory
+import json
 class DataHandler:
     def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, keys: dict):
         """
@@ -26,10 +27,23 @@ class DataHandler:
         def consume_queue():
             """
             Main function of the data handler, it will consume the queue from the node, validate the transactions and decide whether to send them back to the network or not
+            TODO: Parse the information received from the network, if it contains a header field and a transactions field, it means it's a block
             """
             while True:
                 received_data = self.queue_from_node.get()
-                
+                try: 
+                    json_data = json.loads(received_data)
+                except json.JSONDecodeError:
+                    print("Data received was not in JSON format")
+                    continue
+                if "header" in json_data and "transactions" in json_data.keys():
+                    #if it contains a header field and a transactions field, it means it's a block
+                    #TODO: Create the block
+                else:
+                    #TODO: Create the transaction
+
+
+
                 
 
 
