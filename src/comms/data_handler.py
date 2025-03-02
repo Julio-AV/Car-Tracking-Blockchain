@@ -4,5 +4,6 @@ This class is in charge of accepting and refusing data transfers, it will have t
 import queue
 import multiprocessing
 class DataHandler:
-    def __init__(self, data_queue: queue.Queue ):
-        self.data_queue = data_queue
+    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue):
+        self.queue_from_node = queue_from_node
+        self.queue_to_node = queue_to_node
