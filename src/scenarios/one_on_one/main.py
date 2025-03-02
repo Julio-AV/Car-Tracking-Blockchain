@@ -1,9 +1,9 @@
-from comms.connection_handler import Connection_handler
+from comms.connection_handler import ConnectionHandler
 import queue
 import time
 if __name__ == "__main__":
     data_queue = queue.Queue()
-    handler = Connection_handler(5500, data_queue)
+    handler = ConnectionHandler(5500, data_queue)
     handler.start()
     handler.data_queue.get()
     handler.broadcast("Welcome aboard capitain, all systems online")

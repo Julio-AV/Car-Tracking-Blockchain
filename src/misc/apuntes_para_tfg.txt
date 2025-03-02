@@ -7,7 +7,7 @@ Probar IA para monitorización de red
 
 Mencionar consumo energético de la blockchain
 
-Max 50 páginas
+Max 50 páginas, 20 para el diseño de la blockchain
 
 Como funcionan las firmas digitales:
     1️⃣ Se crea la transacción con los datos (remitente, destinatario, monto).

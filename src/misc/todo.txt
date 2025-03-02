@@ -3,15 +3,13 @@ Connection handler:
     - Fix auto connection <-- Not needed, but it would be nice fixing it
     - Add timeout for hosts that don't exist  
 
-- Implementing the blockchain <-- Current step
-- Complete data_handler <-- After blockchain
-- Complete semi-connected network scenario
-- Complete realistic scenario
+- Implementing the blockchain <-- Previous step
+- Complete data_handler <-- Current step
+- Complete simulations
 
 Blockchain:
     Complete transaction validation
     Complete block validation
-    Add fancy block printing
 
 
 Data handler:
@@ -23,6 +21,8 @@ Data handler:
         
     Keep in mind that we need to differentiate block receiving with transaction receiving. 
 
+Connection_handler:
+    - Add queue to transfer broadcasting data from data_handler
 Simulations:
     Create blockchain key management 
     Adapt and test current simulations with blockchain implemented simulation

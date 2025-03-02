@@ -1,10 +1,10 @@
-from comms.connection_handler import Connection_handler
+from comms.connection_handler import ConnectionHandler
 import queue
 import time
 import utils.global_data_utils as global_data_utils
 if __name__ == "__main__":
     data_queue = queue.Queue()
-    handler = Connection_handler(5500, data_queue)
+    handler = ConnectionHandler(5500, data_queue)
     handler.start()
     IPs_path = "IPs.csv"
     IPs = global_data_utils.read_list_from_csv(IPs_path)

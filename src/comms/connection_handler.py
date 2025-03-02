@@ -5,9 +5,10 @@ import queue
 import logging
 from typing import Union
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
-class Connection_handler:
-    def __init__(self, port: int, data_queue: queue.Queue, IP: str = "0.0.0.0"):
-        self.data_queue = data_queue
+class ConnectionHandler:
+    def __init__(self, port: int, queue_to_node: queue.Queue, queue_from_node: queue.Queue, IP: str = "0.0.0.0"):
+        self.queue_to_node = queue_to_node
+        self.queue_from_node = queue_from_node
         self.port = port 
         self.IP = IP;
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -93,7 +94,7 @@ class Connection_handler:
             data = client_socket.recv(size)
             if data:
                 print(f"data received: {data.decode('utf-8')}")
-                self.data_queue.put(data)   #No need to decode the data since our data_handler will do it
+                self.queue_to_node.put(data)   #No need to decode the data since our data_handler will do it
             else:
                 print("Client closed connection.")
                 self.remove_connection(client_ip)
@@ -151,8 +152,7 @@ class Connection_handler:
         """
         accepter = threading.Thread(target=self.accept_and_launch)
         accepter.start()
-        with open("mi_archivo.txt", "w") as archivo:
-                    archivo.write("Thread launched to accept_and_lauch\n")  # Escribir una línea
+        #TODO: Add a thread to listen to the queue and process the data
         
     def launch(self, IP: str):
         """

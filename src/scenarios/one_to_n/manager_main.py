@@ -1,13 +1,13 @@
 import socket
 import queue
-from comms.connection_handler import Connection_handler
+from comms.connection_handler import ConnectionHandler
 import time
 import utils.global_data_utils as global_data_utils
 if __name__ == "__main__":
     machine_IP = "192.168.3.2"
     machine_port = 5500
     data_queue = queue.Queue()
-    handler = Connection_handler(5500, data_queue)
+    handler = ConnectionHandler(5500, data_queue)
     IPs_path = "IPs.csv"
     IPs = global_data_utils.read_list_from_csv(IPs_path)
     handler.open_multiple_connections(IPs)
