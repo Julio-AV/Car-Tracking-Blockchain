@@ -54,9 +54,13 @@ class TransactionFactory:
             print(f"Invalid transaction format: {transaction}")
             return None
     @staticmethod
-    def create_block(serialized_block: str) -> Block:
+    def create_block(serialized_block: str | dict) -> Block:
         """Create a block from a serialized block received from the network"""
-        deserialized_block = json.loads(serialized_block)
+        if type(serialized_block) == str:
+
+            deserialized_block = json.loads(serialized_block)
+        else:
+            deserialized_block = serialized_block
         header_dict = deserialized_block['header'] # Create header
         #Create header object
         header = Header(

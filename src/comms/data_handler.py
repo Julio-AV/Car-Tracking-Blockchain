@@ -40,8 +40,8 @@ class DataHandler:
                 continue
             if "header" in json_data and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
-                #TODO: Create the block and add it to node
-                block = 
+                #TODO: Create the block and add it to node if not in blockchain
+                block = TransactionFactory.create_block(received_data)
             else:
                 #TODO: Create the transaction, validate it and then place it into node queue and transaction list
                 transaction = TransactionFactory.create_transaction(transaction)
@@ -55,7 +55,11 @@ class DataHandler:
                     continue
                     
             
-                self.validate_transaction(transaction)
+                is_valid = self.validate_transaction(transaction)
+                if is_valid:
+                    #If the transaction is valid, add it to the transaction list and the queue to node
+                    self.transaction_list.append(transaction)
+                    self.queue_to_node.put(transaction)
 
 
                 

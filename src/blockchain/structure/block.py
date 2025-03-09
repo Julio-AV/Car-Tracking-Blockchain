@@ -97,12 +97,16 @@ class Block:
     
     def __eq__(self, value):
         is_equal = True
-        if len(self.transactions) != len(value.transactions):
+        try:
+            if len(self.transactions) != len(value.transactions):
+                return False
+            for i in range(len(self.transactions)):
+                if self.transactions[i] != value.transactions[i]:
+                    is_equal = False
+            return self.header == value.header and is_equal
+        except AttributeError as e:
+            print(e)
             return False
-        for i in range(len(self.transactions)):
-            if self.transactions[i] != value.transactions[i]:
-                is_equal = False
-        return self.header == value.header and is_equal
     def pretty_print(self):
         """Print the block in a structured, visually appealing way"""
         width = 100  # Ancho total del bloque
