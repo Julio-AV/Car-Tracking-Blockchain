@@ -1,5 +1,4 @@
 import json
-from abc import ABC, abstractmethod
 class Header:
     def __init__(self, previous_hash, block_number):
         self.block_hash = None
