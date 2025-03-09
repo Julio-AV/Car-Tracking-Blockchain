@@ -5,7 +5,7 @@ Connection handler:
 
 - Implementing the blockchain <-- Previous step
 - Complete data_handler <-- Current step
-- Complete simulations
+- Complete simulations 
 
 Blockchain:
     Complete transaction validation
@@ -35,6 +35,10 @@ Simulations:
     Adapt and test current simulations with blockchain implemented simulation
     Create semi-connected scenario
     Create realistic scenario simulation
+
+Refactoring: 
+    - Rename TransactionFactory to BlockchainFactory
+
 
 Possible errors and debugging:
     Add python output redirecting on docker machines to keep record of traces

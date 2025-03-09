@@ -7,7 +7,8 @@ class Node:
     This class works as a mediator between the connection_handler and the data_handler, connection_handler will use queue.Queue since connection_handler uses
     threading because it does plenty of I/O operation, and data_handler will use multiprocessing.Queue since data_handler uses multiprocessing because it does plenty of CPU operations
     """
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name #Name of the node, e.g. DGT-1
         self.port = 5500    #In case of deploying a docker container, this port needs to be the same that you openned in the container
         self.blockchain = [] #List of blocks
         self.queue_to_connectionHandler = queue.Queue()   #Queue between node and ConnectionHandler (ConnectionHandler is the producer, and node is the consumer)

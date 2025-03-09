@@ -7,8 +7,9 @@ from blockchain.transactionFactory import TransactionFactory
 import json
 from blockchain.structure.transaction import Transaction
 from blockchain.structure.block import Block
+from .node import Node
 class DataHandler:
-    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict):
+    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict, node: Node):
         """
         Connection handler is in charge of telling the connection_handler whether to broadcast a transaction or a block again, therefore to know whether my transaction has 
         been accepted by the network, I will have to receive my transaction again from the network.
@@ -19,6 +20,7 @@ class DataHandler:
         self.queue_to_node = queue_to_node
         self.public_keys = public_keys #Key dictionary with validator: public key
         self.transaction_list = [] #This list will contain all the transactions that have been validated and received throught the network
+        self.node = node
 
     def run(self):
         """
@@ -42,8 +44,11 @@ class DataHandler:
                 #if it contains a header field and a transactions field, it means it's a block
                 #TODO: Create the block and add it to node if not in blockchain
                 block = TransactionFactory.create_block(received_data)
+                if block is None:
+                    print("Block was discaraded")
+                    #If block could not be recovered, or was discarded, continue
+                    continue
             else:
-                #TODO: Create the transaction, validate it and then place it into node queue and transaction list
                 transaction = TransactionFactory.create_transaction(transaction)
                 if transaction is None:
                     print("Transaction was discaraded")
@@ -69,6 +74,15 @@ class DataHandler:
         """
         This function will accept a transaction from the network and validate it
         """
-        transaction.validate_signature(self.public_keys[transaction.emitter])
-        self.transaction_list.append(transaction)
-        self.queue_to_node.put(transaction)
+        if transaction.validate_signature(self.public_keys[transaction.emitter]):
+            self.transaction_list.append(transaction)
+            self.queue_to_node.put(transaction)
+
+    def validate_block(self, block: Block):
+        """
+        This function will accept a block from the network and validate it
+        """
+        block.validate_signature(self.public_keys[block.header.validator_sign])
+        if block not in self.node.blockchain: #Test this, not in uses __eq__ method
+            self.node.blockchain.append(block)
+            self.queue_to_node.put(block)

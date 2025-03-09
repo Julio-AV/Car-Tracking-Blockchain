@@ -56,30 +56,36 @@ class TransactionFactory:
     @staticmethod
     def create_block(serialized_block: str | dict) -> Block:
         """Create a block from a serialized block received from the network"""
-        if type(serialized_block) == str:
-
-            deserialized_block = json.loads(serialized_block)
-        else:
-            deserialized_block = serialized_block
-        header_dict = deserialized_block['header'] # Create header
-        #Create header object
-        header = Header(
-            previous_hash=header_dict["previous_hash"],
-            block_number=header_dict["block_number"],
-        )
-        header.block_hash = header_dict["block_hash"]
-        header.merkle_root = header_dict["merkle_root"]
-        header.time_stamp = header_dict["time_stamp"]
-        header.validator_sign = header_dict["validator_sign"]
-        
-        #Create transactions from block
-        transactions = []
-        for transaction in deserialized_block['transactions']:
-            print(transaction)
-            transactions.append(TransactionFactory.create_transaction(transaction))
-        block = Block(header.previous_hash, header.block_number, transactions, new_block=False)
-        block.header = header
-        return block
+        try:
+            if type(serialized_block) == str:
+                deserialized_block = json.loads(serialized_block)
+            else:
+                deserialized_block = serialized_block
+            header_dict = deserialized_block['header'] # Create header
+            #Create header object
+            header = Header(
+                previous_hash=header_dict["previous_hash"],
+                block_number=header_dict["block_number"],
+            )
+            header.block_hash = header_dict["block_hash"]
+            header.merkle_root = header_dict["merkle_root"]
+            header.time_stamp = header_dict["time_stamp"]
+            header.validator_sign = header_dict["validator_sign"]
+            
+            #Create transactions from block
+            transactions = []
+            for transaction in deserialized_block['transactions']:
+                print(transaction)
+                transactions.append(TransactionFactory.create_transaction(transaction))
+            block = Block(header.previous_hash, header.block_number, transactions, new_block=False)
+            block.header = header
+            return block
+        except KeyError as e:
+            print(f"KeyError while creating block from {serialized_block}: {e}")
+            return None
+        except Exception as e:
+            print(f"Unexpected error while creating block from {serialized_block}: {e}")
+            return None
 
 
 
