@@ -25,7 +25,12 @@ Data handler:
 
 Connection_handler:
     - Add queue to transfer broadcasting data from data_handler
+
+Node: 
+    - Keep in mind that when a block is broadcasted, transaction_list is flushed (or not, we'll see), but if it is flushed, we need 
+        to check on node whether a transaction was on the blockchain or not
 Simulations:
+    Create key handler
     Create blockchain key management 
     Adapt and test current simulations with blockchain implemented simulation
     Create semi-connected scenario

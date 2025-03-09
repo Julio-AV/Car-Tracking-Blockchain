@@ -83,4 +83,5 @@ class Transaction(ABC):
         except ValueError as e:
             print("Transaction rejected due to value error: ", e)
             return False
-    
+    def __eq__(self, value):
+        return self._as_dict() == value._as_dict()

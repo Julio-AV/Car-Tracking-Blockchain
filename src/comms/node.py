@@ -9,6 +9,7 @@ class Node:
     """
     def __init__(self):
         self.port = 5500    #In case of deploying a docker container, this port needs to be the same that you openned in the container
+        self.blockchain = [] #List of blocks
         self.queue_to_connectionHandler = queue.Queue()   #Queue between node and ConnectionHandler (ConnectionHandler is the producer, and node is the consumer)
         self.queue_from_connectionHandler = queue.Queue() #Queue between node and ConnectionHandler (Node is the producer, and ConnectionHandler is the consumer)
         self.connection_handler = ConnectionHandler(self.port, self.queue_from_connectionHandler, self.queue_to_connectionHandler)

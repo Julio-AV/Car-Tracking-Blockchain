@@ -88,7 +88,21 @@ class Block:
     def serialize(self):
         """Serialize the block to send to the network through the socket connections"""
         return json.dumps(self._as_dict())
+
+    @staticmethod
+    def deserialize(serialized_block):
+        """Deserialize the block to receive from the network through the socket connections"""
+        block_dict = json.loads(serialized_block)
+        return block_dict
     
+    def __eq__(self, value):
+        is_equal = True
+        if len(self.transactions) != len(value.transactions):
+            return False
+        for i in range(len(self.transactions)):
+            if self.transactions[i] != value.transactions[i]:
+                is_equal = False
+        return self.header == value.header and is_equal
     def pretty_print(self):
         """Print the block in a structured, visually appealing way"""
         width = 100  # Ancho total del bloque
@@ -125,6 +139,7 @@ if __name__ == '__main__':
     from .inspectionTransaction import InspectionTransaction
     from .accidentTransaction import AccidentTransaction
     from .carTransaction import CarTransaction
+    from ..transactionFactory import TransactionFactory
     inspection_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048
@@ -171,3 +186,15 @@ if __name__ == '__main__':
     block = Block("0", 1, transaction_list)
     block.prepare_block(block_owner_key)    
     block.pretty_print()
+    
+    #Test serializing 
+    block_serialized = block.serialize()
+    print("\nBlock after serialization **********************************************\n")
+    print(block_serialized)
+    #Test deserializing
+    print("\nBlock after deserialization **********************************************\n")
+    deserialized_block = TransactionFactory.create_block(block_serialized)
+    block.pretty_print()
+    deserialized_block.pretty_print()
+    print(deserialized_block == block)
+    print(deserialized_block.validate_signature(public_key_block_owner_key))

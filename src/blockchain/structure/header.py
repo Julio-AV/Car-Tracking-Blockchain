@@ -1,4 +1,5 @@
 import json
+from abc import ABC, abstractmethod
 class Header:
     def __init__(self, previous_hash, block_number):
         self.block_hash = None
@@ -28,6 +29,24 @@ class Header:
     
     def serialize(self):
         return json.dumps(self._as_dict())
+    
+
+    def __eq__(self, value):
+        return self._as_dict() == value._as_dict()
+
+    # @abstractmethod
+    # def deserialize(serialized_header):
+    #     """Deserialize header received from network into a header object"""
+    #     header_dict = json.loads(serialized_header)
+    #     header = Header(
+    #         previous_hash=header_dict["previous_hash"],
+    #         block_number=header_dict["block_number"],
+    #     )
+    #     header.block_hash = header_dict["block_hash"]
+    #     header.merkle_root = header_dict["merkle_root"]
+    #     header.time_stamp = header_dict["time_stamp"]
+    #     header.validator_sign = header_dict["validator_sign"]
+    #     return header
     
 
     def __str__(self):
