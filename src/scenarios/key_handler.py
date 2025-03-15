@@ -1,0 +1,80 @@
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+import json
+import os
+
+def generate_and_store_keys(keys: list, public_file='public_keys.json', private_file='private_keys.json'):
+    public_keys = {}
+    private_keys = {}
+    
+    for key_name in keys:
+        # Obtain private key
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048
+        )
+        
+        # Obtain public key
+        public_key = private_key.public_key()
+        # Serialize keys
+        private_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        ).decode()
+        
+        public_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ).decode()
+        
+        # Add to dictionaries
+        public_keys[key_name] = public_pem
+        private_keys[key_name] = private_pem
+    
+    # Store in JSON files
+    with open(public_file, 'w') as pub_file:
+        json.dump(public_keys, pub_file, indent=4)
+    
+    with open(private_file, 'w') as priv_file:
+        json.dump(private_keys, priv_file, indent=4)
+    
+    print("Keys generated and stored successfully.")
+
+def load_keys(key_name, public_file='public_keys.json', private_file='private_keys.json'):
+    try:
+        with open(public_file, 'r') as pub_file:
+            public_keys = json.load(pub_file)
+        with open(private_file, 'r') as priv_file:
+            private_keys = json.load(priv_file)
+        
+        public_pem = public_keys.get(key_name)
+        private_pem = private_keys.get(key_name)
+        
+        if public_pem and private_pem:
+            public_key = serialization.load_pem_public_key(public_pem.encode())
+            private_key = serialization.load_pem_private_key(private_pem.encode(), password=None)
+            return public_key, private_key
+        else:
+            raise ValueError("Key not found.")
+    except FileNotFoundError:
+        raise FileNotFoundError("Key file not found.")
+
+def clear_key_files(public_file='public_keys.json', private_file='private_keys.json'):
+    try:
+        if os.path.exists(public_file):
+            os.remove(public_file)
+        if os.path.exists(private_file):
+            os.remove(private_file)
+        print("Key files cleared succerssfully.")
+    except Exception as e:
+        print(f"Error deleting key files: {e}")
+
+
+
+
+if __name__ == '__main__':
+    generate_and_store_keys(["usuario1", "usuario2"])
+    public_key, private_key = load_keys("usuario2")
+    print(type(private_key))
+    clear_key_files()
