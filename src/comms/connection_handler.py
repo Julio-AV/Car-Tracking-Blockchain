@@ -136,6 +136,14 @@ class ConnectionHandler:
         TODO: Encoding to JSON or whatever type of communication will be using
         """
         return msg.encode()
+    
+    def consume_and_broadcast(self):
+        """
+        This function will be used by a thread that will listen to the queue between the node and the connection handler and will broadcast the messages to all open connections
+        """
+        while True:
+            msg = self.queue_from_node.get()
+            self.broadcast(msg)
 
     def broadcast(self, msg: str) -> None:
         """
@@ -148,11 +156,12 @@ class ConnectionHandler:
 
     def start(self):
         """
-        When the handler opens a connection, it will start a thread to listen to that connection
+        Start all threads from the connection handler
         """
         accepter = threading.Thread(target=self.accept_and_launch)
         accepter.start()
-        #TODO: Add a thread to listen to the queue and process the data
+        broadcaster = threading.Thread(target=self.consume_and_broadcast)
+        broadcaster.start()
         
     def launch(self, IP: str):
         """
@@ -167,6 +176,3 @@ class ConnectionHandler:
             if ip != -1:
                 logging.info(f"Connection accepted with {ip}, launching listener")
                 self.launch(ip)
-                # Abrir un archivo en modo escritura ('w')
-                with open("mi_archivo.txt", "a") as archivo:
-                    archivo.write(f"launched listener to ip {ip}\n")  # Escribir una línea

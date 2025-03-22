@@ -42,21 +42,26 @@ def generate_and_store_keys(keys: list, public_file='public_keys.json', private_
     print("Keys generated and stored successfully.")
 
 def load_keys(key_name, public_file='public_keys.json', private_file='private_keys.json'):
+    """
+    Load al public keys in a dictionary and load node own private key
+    """
     try:
         with open(public_file, 'r') as pub_file:
-            public_keys = json.load(pub_file)
+            public_keys_data = json.load(pub_file)
         with open(private_file, 'r') as priv_file:
             private_keys = json.load(priv_file)
         
-        public_pem = public_keys.get(key_name)
         private_pem = private_keys.get(key_name)
-        
-        if public_pem and private_pem:
-            public_key = serialization.load_pem_public_key(public_pem.encode())
+
+        public_keys = {}
+        for key_name, public_pem in public_keys_data.items():
+            public_keys[key_name] = serialization.load_pem_public_key(public_pem.encode())
+
+        if private_pem:
             private_key = serialization.load_pem_private_key(private_pem.encode(), password=None)
-            return public_key, private_key
+            return public_keys, private_key
         else:
-            raise ValueError("Key not found.")
+            raise ValueError(f"Key {key_name} not found.")
     except FileNotFoundError:
         raise FileNotFoundError("Key file not found.")
 
@@ -75,6 +80,7 @@ def clear_key_files(public_file='public_keys.json', private_file='private_keys.j
 
 if __name__ == '__main__':
     generate_and_store_keys(["usuario1", "usuario2"])
-    public_key, private_key = load_keys("usuario2")
+    public_keys, private_key = load_keys("usuario2")
+    print(public_keys)
     print(type(private_key))
     clear_key_files()

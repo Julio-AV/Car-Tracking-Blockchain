@@ -22,9 +22,9 @@ class DataHandler:
         self.transaction_list = [] #This list will contain all the transactions that have been validated and received throught the network
         self.node = node
 
-    def run(self):
+    def start(self):
         """
-        This function will star the data handler
+        This function will start the data handler
         """
         multiprocessing.Process(target=self.consume_queue).start()
 
@@ -64,7 +64,9 @@ class DataHandler:
                 if is_valid:
                     #If the transaction is valid, add it to the transaction list and the queue to node
                     self.transaction_list.append(transaction)
-                    self.queue_to_node.put(transaction)
+                    self.queue_to_node.put(transaction.serialize())
+                else:
+                    print(f"Transaction {transaction} was not valid")
 
 
                 
