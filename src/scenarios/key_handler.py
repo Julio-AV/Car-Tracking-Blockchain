@@ -76,6 +76,31 @@ def clear_key_files(public_file='public_keys.json', private_file='private_keys.j
         print(f"Error deleting key files: {e}")
 
 
+def save_node_name(node_name, node_file='node_info.json'):
+    """
+    Write a node name to a file (file is a JSON with a single key "node_name")
+    """
+    with open(node_file, 'w') as file:
+        json.dump({"node_name": node_name}, file, indent=4)
+    print("Nombre del nodo guardado correctamente.")
+
+def load_node_name(node_file='node_info.json'):
+    """
+    Load node name from a file (file is a JSON with a single key "node_name")
+    """
+    try:
+        with open(node_file, 'r') as file:
+            data = json.load(file)
+            return data.get("node_name")
+    except FileNotFoundError:
+        raise FileNotFoundError("Archivo de información del nodo no encontrado.")
+
+def clear_key_files(node_file='node_info.json'):
+    try:
+        if os.path.exists(node_file):
+            os.remove(node_file)
+    except Exception as e:
+        print(f"Error deleting node file {node_file}: {e}")
 
 
 if __name__ == '__main__':

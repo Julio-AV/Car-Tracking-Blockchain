@@ -1,6 +1,6 @@
 from connection_handler import ConnectionHandler
 from data_handler import DataHandler
-from scenarios.key_handler import load_keys
+from scenarios.key_handler import load_keys, load_node_name
 import queue
 import multiprocessing
 class Node:
@@ -8,8 +8,8 @@ class Node:
     This class works as a mediator between the connection_handler and the data_handler, connection_handler will use queue.Queue since connection_handler uses
     threading because it does plenty of I/O operation, and data_handler will use multiprocessing.Queue since data_handler uses multiprocessing because it does plenty of CPU operations
     """
-    def __init__(self, name):
-        self.name = name #Name of the node, e.g. DGT-1
+    def __init__(self):
+        self.name = load_node_name() #Name of the node, e.g. DGT-1
         self.port = 5500    #In case of deploying a docker container, this port needs to be the same that you openned in the container
         self.blockchain = [] #List of blocks
         self.keys = load_keys(self.name)
