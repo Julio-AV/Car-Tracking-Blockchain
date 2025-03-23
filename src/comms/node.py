@@ -1,6 +1,6 @@
 from .connection_handler import ConnectionHandler
 from .data_handler import DataHandler
-from scenarios.key_handler import load_keys, load_node_name
+from utils.key_handler import load_keys, load_node_name
 import queue
 import multiprocessing
 import threading

@@ -18,9 +18,8 @@ Data handler:
 Node: 
     - Keep in mind that when a block is broadcasted, transaction_list is flushed (or not, we'll see), but if it is flushed, we need 
         to check on node whether a transaction was on the blockchain or not
-Simulations:
-    Create key handler
-    Create blockchain key management 
+
+Simulations: 
     Adapt and test current simulations with blockchain implemented simulation
     Create semi-connected scenario
     Create realistic scenario simulation
@@ -35,6 +34,7 @@ Possible errors and debugging:
 
 
 Que hacer mañana:
+    Te has quedado haciendo la imagen del manager, luego haz lo de abajo amego
     Te has quedado probando la imagen de docker, que tienes que crear la red y tal, luego crear el main del escenario y probar a mandar dos mensajes IGUALES desde el manager
-        probar ocn transacciones como con bloques
-        Soluciona lo de la version de python
+        probar con transacciones como con bloques
+        
