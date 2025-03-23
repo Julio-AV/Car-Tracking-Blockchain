@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives import serialization
 import json
 import os
 
-def generate_and_store_keys(node_names: list, public_file='public_keys.json', private_file='private_keys.json'):
+def generate_and_store_keys(node_names: list, public_file='data/public_keys.json', private_file='data/private_keys.json'):
     public_keys = {}
     private_keys = {}
     
@@ -41,7 +41,7 @@ def generate_and_store_keys(node_names: list, public_file='public_keys.json', pr
     
     print("Keys generated and stored successfully.")
 
-def load_keys(key_name, public_file='public_keys.json', private_file='private_keys.json'):
+def load_keys(key_name, public_file='data/public_keys.json', private_file='data/private_keys.json'):
     """
     Load al public keys in a dictionary and load node own private key
     """
@@ -65,7 +65,7 @@ def load_keys(key_name, public_file='public_keys.json', private_file='private_ke
     except FileNotFoundError:
         raise FileNotFoundError("Key file not found.")
 
-def clear_key_files(public_file='public_keys.json', private_file='private_keys.json'):
+def clear_key_files(public_file='data/public_keys.json', private_file='data/private_keys.json'):
     try:
         if os.path.exists(public_file):
             os.remove(public_file)
@@ -76,7 +76,7 @@ def clear_key_files(public_file='public_keys.json', private_file='private_keys.j
         print(f"Error deleting key files: {e}")
 
 
-def save_node_name(node_name, node_file='node_info.json'):
+def save_node_name(node_name, node_file='data/node_info.json'):
     """
     Write a node name to a file (file is a JSON with a single key "node_name")
     """
@@ -84,7 +84,7 @@ def save_node_name(node_name, node_file='node_info.json'):
         json.dump({"node_name": node_name}, file, indent=4)
     print("Nombre del nodo guardado correctamente.")
 
-def load_node_name(node_file='node_info.json'):
+def load_node_name(node_file='data/node_info.json'):
     """
     Load node name from a file (file is a JSON with a single key "node_name")
     """
@@ -95,7 +95,7 @@ def load_node_name(node_file='node_info.json'):
     except FileNotFoundError:
         raise FileNotFoundError("Archivo de información del nodo no encontrado.")
 
-def clear_key_files(node_file='node_info.json'):
+def clear_key_files(node_file='data/node_info.json'):
     try:
         if os.path.exists(node_file):
             os.remove(node_file)
