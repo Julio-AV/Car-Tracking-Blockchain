@@ -1,12 +1,18 @@
-#MANAGER MACHINE
-FROM ubuntu:20.04
+FROM python:3.12-slim
 
-RUN mkdir app
+
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    apt-get clean
+COPY requirements.txt .
 
-#tail is a dummy process so container doesn't exit once the process is done
+
+RUN python -m venv venv && venv/bin/pip install --no-cache-dir -r requirements.txt
+
+
+COPY blockchain/ ./blockchain
+COPY comms/ ./comms
+COPY scenarios/one_on_one/main.py .
+COPY utils/ ./utils
+
+
 CMD tail -f /dev/null 

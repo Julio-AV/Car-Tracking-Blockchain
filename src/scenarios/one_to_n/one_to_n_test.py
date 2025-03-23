@@ -10,7 +10,7 @@ print(f"Path added to sys.path: {src_dir}")
 sys.path.insert(0, src_dir) #We need this lines to be able to use docker package
 from docker import Container
 from docker import create_network
-import utils.global_data_utils as global_data_utils
+import utils.IP_file_handler as IP_file_handler
 DEPENDENCIES_PATH = "comms"
 UTILS_PATH = "utils"
 CONTAINER_MAIN_PATH = "/app/"
@@ -28,7 +28,7 @@ MAIN_PATH = "scenarios/one_to_n/main.py"
 IP_FILE = "IPs.csv"
 IPs = [TC_IP + str(i + IP_OFFSET) for i in range(N_TC)]
 
-global_data_utils.write_list_to_csv(IP_FILE, IPs)
+IP_file_handler.write_list_to_csv(IP_FILE, IPs)
 
 create_network(TC_IP + "0", NETWORK)
 
@@ -69,5 +69,5 @@ for container in container_list:
     container.remove_container()
 m_container.remove_container()
 
-global_data_utils.delete_file(IP_FILE)
+IP_file_handler.delete_file(IP_FILE)
 

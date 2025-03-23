@@ -1,24 +1,20 @@
-FROM ubuntu:20.04
+FROM python:3.12-slim
 
-WORKDIR /app 
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    apt-get clean
+WORKDIR /app
 
-#Download requirements for app
+
 COPY requirements.txt .
-RUN pip install -r requirements.txt
 
-#Copy all dependencies
-COPY blockchain/ .
-COPY comms/ .
+
+RUN python -m venv venv && venv/bin/pip install --no-cache-dir -r requirements.txt
+
+
+COPY blockchain/ ./blockchain
+COPY comms/ ./comms
 COPY scenarios/one_on_one/main.py .
-COPY scenarios/file_managers/* .
+COPY utils/ ./utils
 
-RUN ls
 
-#tail is a dummy process so container don't exit once the process is done
-#["python3", "main.py", "&&", "tail", "-f", "/dev/null"]
 
-CMD python3 main.py &&  tail -f /dev/null 
+CMD ["venv/bin/python", "main.py"]

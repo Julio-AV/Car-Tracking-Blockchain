@@ -37,3 +37,4 @@ Possible errors and debugging:
 Que hacer mañana:
     Te has quedado probando la imagen de docker, que tienes que crear la red y tal, luego crear el main del escenario y probar a mandar dos mensajes IGUALES desde el manager
         probar ocn transacciones como con bloques
+        Soluciona lo de la version de python
