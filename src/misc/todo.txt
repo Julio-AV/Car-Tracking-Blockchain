@@ -13,18 +13,7 @@ Blockchain:
 
 
 Data handler:
-    Once you receive a block, keep in mind it will have to be broadcasted, 
-        which will be done by a thread that's communicated with the data handler by a queue,
-        so, the data handler will put a transaction/block on the queue if he hasn't stored it yet, which means that if 
-        the transaction or block is already stored, it means that is was received previously, which means that it should not be
-        broadcasted.
-        
-    Keep in mind that we need to differentiate block receiving with transaction receiving. 
-
-    Validate signature, but first you need to create the keys
-
-Connection_handler:
-    - Add queue to transfer broadcasting data from data_handler
+    - add transaction list clearing (pending)
 
 Node: 
     - Keep in mind that when a block is broadcasted, transaction_list is flushed (or not, we'll see), but if it is flushed, we need 
@@ -43,3 +32,8 @@ Refactoring:
 Possible errors and debugging:
     Add python output redirecting on docker machines to keep record of traces
     Possible error decoding digital sign after sending through sockets
+
+
+Que hacer mañana:
+    empezar con la simulación
+    quizás te tocará cambiar el tema de los imports, porque me parece que no soportan los imports relativos 

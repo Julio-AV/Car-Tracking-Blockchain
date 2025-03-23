@@ -3,11 +3,11 @@ from cryptography.hazmat.primitives import serialization
 import json
 import os
 
-def generate_and_store_keys(keys: list, public_file='public_keys.json', private_file='private_keys.json'):
+def generate_and_store_keys(node_names: list, public_file='public_keys.json', private_file='private_keys.json'):
     public_keys = {}
     private_keys = {}
     
-    for key_name in keys:
+    for key_name in node_names:
         # Obtain private key
         private_key = rsa.generate_private_key(
             public_exponent=65537,

@@ -1,15 +1,14 @@
 """
 This class is in charge of accepting and refusing data transfers, it will have to check weather the sender is allowed to send data to the receiver, the transaction validation is done in transactions.
 """
-import queue
 import multiprocessing
 from blockchain.transactionFactory import TransactionFactory
 import json
 from blockchain.structure.transaction import Transaction
 from blockchain.structure.block import Block
-from .node import Node
+ 
 class DataHandler:
-    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict, node: Node):
+    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict, blockchain: list):
         """
         Connection handler is in charge of telling the connection_handler whether to broadcast a transaction or a block again, therefore to know whether my transaction has 
         been accepted by the network, I will have to receive my transaction again from the network.
@@ -85,6 +84,6 @@ class DataHandler:
         This function will accept a block from the network and validate it
         """
         block.validate_signature(self.public_keys[block.header.validator_sign])
-        if block not in self.node.blockchain: #Test this, not in uses __eq__ method
-            self.node.blockchain.append(block)
+        if block not in self.blockchain: #Test this, not in uses __eq__ method
+            self.blockchain.append(block)
             self.queue_to_node.put(block)
