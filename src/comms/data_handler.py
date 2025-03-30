@@ -19,7 +19,7 @@ class DataHandler:
         self.queue_to_node = queue_to_node
         self.public_keys = public_keys #Key dictionary with validator: public key
         self.transaction_list = [] #This list will contain all the transactions that have been validated and received throught the network
-        self.node = node
+        self.blockchain = blockchain
 
     def start(self):
         """

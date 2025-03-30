@@ -82,7 +82,7 @@ def save_node_name(node_name, node_file='data/node_info.json'):
     """
     with open(node_file, 'w') as file:
         json.dump({"node_name": node_name}, file, indent=4)
-    print("Nombre del nodo guardado correctamente.")
+    print("Node name saved successfully.")
 
 def load_node_name(node_file='data/node_info.json'):
     """
@@ -93,9 +93,11 @@ def load_node_name(node_file='data/node_info.json'):
             data = json.load(file)
             return data.get("node_name")
     except FileNotFoundError:
-        raise FileNotFoundError("Archivo de información del nodo no encontrado.")
+        raise FileNotFoundError("Node info file not found.")
+    except json.JSONDecodeError:
+        raise ValueError("Node info file is not in valid JSON format.")
 
-def clear_key_files(node_file='data/node_info.json'):
+def clear_node_files(node_file='data/node_info.json'):
     try:
         if os.path.exists(node_file):
             os.remove(node_file)

@@ -9,7 +9,19 @@ sys.path.insert(0, src_dir) #We need this lines to be able to use docker package
 from docker import Container
 from docker import create_network
 
-dependencies = "comms"
+#------------------------------------------------
+#   Create keys and node information
+#------------------------------------------------
+from utils.key_handler import generate_and_store_keys, clear_key_files
+from utils.key_handler import save_node_name, clear_node_files
+node_names = ["autonomous_node", "manager_node"]
+generate_and_store_keys(node_names)
+
+
+
+DEPENDENCIES = ["comms", "utils", "blockchain"]
+CONTAINER_INFO = ["data/node_info.json", "data/public_keys.json", "data/private_keys.json"]
+DATA_PATH = "/app/data/"
 container_main_path = "/app/"
 #Autonomous container
 tc_name = "one_on_one_auto"
@@ -22,9 +34,19 @@ main_path = "scenarios/one_on_one/main.py"
 create_network(tc_ip, NETWORK)
 test_container = Container(tc_name,tc_real_port, tc_VM_port, tc_ip, NETWORK, tc_image)
 test_container.create()
-#test_container.copy(main_path, container_main_path)
-#test_container.copy(dependencies, container_main_path)
-test_container.wake(dettached=False)
+test_container.copy(main_path, container_main_path)
+
+for dependency in DEPENDENCIES:
+    test_container.copy(dependency, container_main_path)
+for info in CONTAINER_INFO:
+    test_container.copy(info, DATA_PATH)
+
+#Copy the node name to it's container
+AUTONOMOUS_NODE_NAME = "autonomous_node"
+save_node_name(AUTONOMOUS_NODE_NAME, "data/node_info.json")
+test_container.copy("data/node_info.json", DATA_PATH)
+
+#test_container.wake(dettached=False)
 
 
 
@@ -47,4 +69,6 @@ test_container.wake(dettached=False)
 #Clean containers
 input("Push enter to remove containers")
 test_container.remove_container()
+clear_key_files()
+clear_node_files()
 #m_container.remove_container()
