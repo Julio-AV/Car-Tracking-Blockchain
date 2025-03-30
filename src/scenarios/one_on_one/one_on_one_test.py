@@ -24,29 +24,29 @@ CONTAINER_INFO = ["data/node_info.json", "data/public_keys.json", "data/private_
 DATA_PATH = "/app/data/"
 container_main_path = "/app/"
 #Autonomous container
-# tc_name = "one_on_one_auto"
-# tc_ip = "192.168.3.2"
-# tc_real_port = 5500
-# tc_VM_port = 5500
+tc_name = "one_on_one_auto"
+tc_ip = "192.168.3.2"
+tc_real_port = 5500
+tc_VM_port = 5500
 NETWORK = "test_network"
-# tc_image = "node_image"
-# main_path = "scenarios/one_on_one/main.py"
-# create_network(tc_ip, NETWORK)
-# test_container = Container(tc_name,tc_real_port, tc_VM_port, tc_ip, NETWORK, tc_image)
-# test_container.create()
-# test_container.copy(main_path, container_main_path)
+tc_image = "node_image"
+main_path = "scenarios/one_on_one/main.py"
+create_network(tc_ip, NETWORK)
+test_container = Container(tc_name,tc_real_port, tc_VM_port, tc_ip, NETWORK, tc_image)
+test_container.create()
+test_container.copy(main_path, container_main_path)
 
-# for dependency in DEPENDENCIES:
-#     test_container.copy(dependency, container_main_path)
-# for info in CONTAINER_INFO:
-#     test_container.copy(info, DATA_PATH)
+for dependency in DEPENDENCIES:
+    test_container.copy(dependency, container_main_path)
+for info in CONTAINER_INFO:
+    test_container.copy(info, DATA_PATH)
 
-# #Copy the node name to it's container
-# AUTONOMOUS_NODE_NAME = "autonomous_node"
-# save_node_name(AUTONOMOUS_NODE_NAME, "data/node_info.json")
-# test_container.copy("data/node_info.json", DATA_PATH)
+#Copy the node name to it's container
+AUTONOMOUS_NODE_NAME = "autonomous_node"
+save_node_name(AUTONOMOUS_NODE_NAME, "data/node_info.json")
+test_container.copy("data/node_info.json", DATA_PATH)
 
-#test_container.wake(dettached=False)
+test_container.wake()
 
 
 
@@ -75,7 +75,7 @@ m_container.wake_and_control()
 
 #Clean containers
 input("Push enter to remove containers")
-#test_container.remove_container()
+test_container.remove_container()
 clear_key_files()
 clear_node_files()
 m_container.remove_container()

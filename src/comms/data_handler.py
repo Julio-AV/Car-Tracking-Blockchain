@@ -62,6 +62,7 @@ class DataHandler:
                 is_valid = self.validate_transaction(transaction)
                 if is_valid:
                     #If the transaction is valid, add it to the transaction list and the queue to node
+                    print(f"Accepted transaction {transaction}")
                     self.transaction_list.append(transaction)
                     self.queue_to_node.put(transaction.serialize())
                 else:

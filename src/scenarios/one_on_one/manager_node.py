@@ -15,6 +15,7 @@ class ManagerNode(Node):
         new_owner="First Owner",
         car_id="LJCPCBLCX11000237"
     )
-        example_transaction.prepare_transaction(self.private_key)    
-        self.queue_to_connectionHandler.put(example_transaction)
+        example_transaction.prepare_transaction(self.private_key) 
+        serialized_transaction = example_transaction.serialize()   
+        self.queue_to_connectionHandler.put(serialized_transaction)
         print("Transaction sent to connection handler")
