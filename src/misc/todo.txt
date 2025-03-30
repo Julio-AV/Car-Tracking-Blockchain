@@ -3,8 +3,6 @@ Connection handler:
     - Fix auto connection <-- Not needed, but it would be nice fixing it
     - Add timeout for hosts that don't exist  
 
-- Implementing the blockchain <-- Previous step
-- Complete data_handler <-- Current step
 - Complete simulations 
 
 Blockchain:
@@ -32,9 +30,6 @@ Possible errors and debugging:
     Add python output redirecting on docker machines to keep record of traces
     Possible error decoding digital sign after sending through sockets
 
-
-Que hacer mañana:
-    Te has quedado haciendo la imagen del manager, luego haz lo de abajo amego
-    Te has quedado probando la imagen de docker, que tienes que crear la red y tal, luego crear el main del escenario y probar a mandar dos mensajes IGUALES desde el manager
-        probar con transacciones como con bloques
+Seguir el hilo:
+    - Tienes que hacer lo de 
         

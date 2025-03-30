@@ -55,11 +55,8 @@ class ConnectionHandler:
                     logging.info(f"Trying to connect to {IP}")
                     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     #client_socket.settimeout(5)  # Set a timeout of 5 seconds (this timeout is applied to every aspect of the connection)
-                    print("Intento conectar")
                     client_socket.connect((IP, port))
-                    print("Conectado")
                     self.open_connections[IP] = client_socket
-                    print("añado conexion")
                     print(f"Connection established with {IP}")
                     self.launch(IP) #Listen to the connection
 

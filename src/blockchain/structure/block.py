@@ -7,9 +7,9 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.exceptions import InvalidSignature
 import json
 class Block:
-    def __init__(self, previous_hash, block_number ,transactions: list[Transaction], new_block = True):
+    def __init__(self, previous_hash, block_number ,transactions: list[Transaction], emmiter, new_block = True):
         """Signature is made from outside, since python is a piece of shit and doesn't allow function overcharging"""
-        self.header: Header = Header(previous_hash= previous_hash, block_number= block_number)
+        self.header: Header = Header(previous_hash= previous_hash, block_number= block_number, emmiter=emmiter)
         self.transactions = transactions
         if new_block:
             #In case it is a received block, the factory will handle the creation of the block
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     )
     public_key_block_owner_key = block_owner_key.public_key()
     transaction_list = [inspection_example, accident_example, car_transaction]
-    block = Block("0", 1, transaction_list)
+    block = Block("0", 1, transaction_list, "DGT")
     block.prepare_block(block_owner_key)    
     block.pretty_print()
     

@@ -47,6 +47,10 @@ class DataHandler:
                     print("Block was discaraded")
                     #If block could not be recovered, or was discarded, continue
                     continue
+                elif block not in self.blockchain:
+                    #If block is not in the blockchain, add it to the blockchain
+
+                    block.validate_signature(self.public_keys[block.header.emitter])
             else:
                 transaction = TransactionFactory.create_transaction(transaction)
                 if transaction is None:
@@ -58,8 +62,11 @@ class DataHandler:
                     #If transaction was already received, continue
                     continue
                     
-            
-                is_valid = self.validate_transaction(transaction)
+                try:
+                    is_valid = transaction.validate(self.public_keys[transaction.emitter], self.blockchain)
+                except KeyError:
+                    print(f"Transaction {transaction} was not valid, emitter {transaction.emitter} not found")
+                    is_valid = False
                 if is_valid:
                     #If the transaction is valid, add it to the transaction list and the queue to node
                     print(f"Accepted transaction {transaction}")
@@ -72,19 +79,13 @@ class DataHandler:
                 
 
 
-    def validate_transaction(self, transaction: Transaction):
-        """
-        This function will accept a transaction from the network and validate it
-        """
-        if transaction.validate_signature(self.public_keys[transaction.emitter]):
-            self.transaction_list.append(transaction)
-            self.queue_to_node.put(transaction)
 
     def validate_block(self, block: Block):
         """
         This function will accept a block from the network and validate it
         """
         block.validate_signature(self.public_keys[block.header.validator_sign])
+        #missing block.validate
         if block not in self.blockchain: #Test this, not in uses __eq__ method
             self.blockchain.append(block)
             self.queue_to_node.put(block)

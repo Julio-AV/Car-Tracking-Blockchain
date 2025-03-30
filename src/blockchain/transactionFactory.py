@@ -53,6 +53,8 @@ class TransactionFactory:
         except KeyError:
             print(f"Invalid transaction format: {transaction}")
             return None
+        
+
     @staticmethod
     def create_block(serialized_block: str | dict) -> Block:
         """Create a block from a serialized block received from the network"""
@@ -66,18 +68,18 @@ class TransactionFactory:
             header = Header(
                 previous_hash=header_dict["previous_hash"],
                 block_number=header_dict["block_number"],
+                emmiter=header_dict["emitter"],
             )
             header.block_hash = header_dict["block_hash"]
             header.merkle_root = header_dict["merkle_root"]
             header.time_stamp = header_dict["time_stamp"]
             header.validator_sign = header_dict["validator_sign"]
-            
             #Create transactions from block
             transactions = []
             for transaction in deserialized_block['transactions']:
                 print(transaction)
                 transactions.append(TransactionFactory.create_transaction(transaction))
-            block = Block(header.previous_hash, header.block_number, transactions, new_block=False)
+            block = Block(header.previous_hash, header.block_number, transactions, header.emitter, new_block=False)
             block.header = header
             return block
         except KeyError as e:

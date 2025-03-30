@@ -18,9 +18,11 @@ class Transaction(ABC):
             self.timestamp = None
             self.transaction_hash = None
     
-    @abstractmethod
-    def validate(self, blockchain):
+    def validate(self, public_key, blockchain):
         """Validate the data of the transaction"""
+        signature_is_valid = self.validate_signature(public_key)
+        #Missing transaction validation based on blockchain status
+        return signature_is_valid
 
     @abstractmethod
     def _as_dict(self):
