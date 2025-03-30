@@ -1,6 +1,7 @@
 from comms.node import Node
 from blockchain.structure.carTransaction import CarTransaction
 from blockchain.structure.block import Block
+from cryptography.hazmat.primitives.asymmetric import rsa
 class ManagerNode(Node):
     #inherit node class and extend it to add manager specific functionality
     def __init__(self):
@@ -19,13 +20,21 @@ class ManagerNode(Node):
         serialized_transaction = example_transaction.serialize()   
         self.queue_to_connectionHandler.put(serialized_transaction)
         print("Transaction sent to connection handler")
+
         manipulated_transaction = CarTransaction(
             emitter=self.name,
-            old_owner="-",
-            new_owner="First Owner",
-            car_id="LJCPCBLCX11000237"
+            old_owner="694034B",
+            new_owner="485943K",
+            car_id="BCKRCLLCX11000442"
             )
-        fake_key = self.public_keys["autonomous_node"]
-        #example_transaction.sign(fake_key)
+        
+        fake_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048
+        )
+        
+        manipulated_transaction.sign(fake_key)
+        serialized_manipulated_transaction = manipulated_transaction.serialize()
+        self.queue_to_connectionHandler.put(serialized_manipulated_transaction)
 
         

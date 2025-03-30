@@ -37,8 +37,6 @@ class Node:
         """
         while True:
             data_to_send = self.queue_from_connectionHandler.get()
-            print("Data received from connection handler")
-            print(data_to_send)
             self.queue_to_dataHandler.put(data_to_send)
 
     def generate_data(self):

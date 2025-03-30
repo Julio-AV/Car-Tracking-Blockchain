@@ -74,7 +74,8 @@ m_container.copy("data/node_info.json", DATA_PATH)
 m_container.wake_and_control()
 
 #Clean containers
-input("Push enter to remove containers")
+
+input("\nPress enter to remove containers:")
 test_container.remove_container()
 clear_key_files()
 clear_node_files()

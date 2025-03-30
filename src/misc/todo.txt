@@ -30,5 +30,5 @@ Possible errors and debugging:
     Possible error decoding digital sign after sending through sockets
 
 Seguir el hilo:
-    - Tienes que hacer lo de las IPs bien, es decir, que el connection handler se conecte a las IPs que debe 
+    - Tienes que hacer lo de las IPs bien, es decir, que el connection handler se conecte a las IPs que debe (con el csv de IPs a conectar)
         
