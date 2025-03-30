@@ -7,7 +7,7 @@ class CarTransaction(Transaction):
         self.car_id = car_id
         super().__init__(emitter, new_transaction=new_transaction)
     
-    def validate(self):
+    def validate_transaction_content(self, blockchain):
         """TODO: Implement function"""
         pass
     

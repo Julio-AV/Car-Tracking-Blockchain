@@ -18,11 +18,6 @@ class Transaction(ABC):
             self.timestamp = None
             self.transaction_hash = None
     
-    def validate(self, public_key, blockchain):
-        """Validate the data of the transaction"""
-        signature_is_valid = self.validate_signature(public_key)
-        #Missing transaction validation based on blockchain status
-        return signature_is_valid
 
     @abstractmethod
     def _as_dict(self):
@@ -31,7 +26,16 @@ class Transaction(ABC):
     @abstractmethod
     def _get_transaction_main_data(self):
         """Return the main data of the transaction as a dictionary, used to calculate the hash of the transaction"""
+    @abstractmethod
+    def validate_transaction_content(self, blockchain):
+        """Validate integrity of the contents of the blockchain, e.g, transaction of a car that doesn't exist on the blockchain"""
 
+    def validate(self, public_key, blockchain):
+        """Validate the data of the transaction"""
+        signature_is_valid = self.validate_signature(public_key)
+        transaction_content_is_valid = self.validate_transaction_content(blockchain)
+        #TODO: Complete content validation and add it to return statement
+        return signature_is_valid
     
     def prepare_transaction(self, private_key):
         """Prepare the transaction to be sent to the network, currently just a wrapper for sign"""

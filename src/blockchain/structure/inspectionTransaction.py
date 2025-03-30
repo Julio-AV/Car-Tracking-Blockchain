@@ -8,7 +8,7 @@ class InspectionTransaction(Transaction):
         self.kilometers = kilometers
         super().__init__(emitter, new_transaction=new_transaction)
     
-    def validate(self, blockchain: list[Block]):
+    def validate_transaction_content(self, blockchain):
         pass
 
     def _as_dict(self):

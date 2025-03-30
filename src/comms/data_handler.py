@@ -41,7 +41,7 @@ class DataHandler:
                 continue
             if "header" in json_data and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
-                block = TransactionFactory.create_block(received_data)
+                block = TransactionFactory.create_block(json_data)
                 if block is None:
                     print("Block was discaraded")
                     #If block could not be recovered, or was discarded, continue
@@ -51,8 +51,10 @@ class DataHandler:
                     is_valid_block = block.validate(self.public_keys, self.blockchain)
                     if is_valid_block:
                         self.blockchain.append(block)
+                    else:
+                        print("Block was discarded...")
             else:
-                transaction = TransactionFactory.create_transaction(transaction)
+                transaction = TransactionFactory.create_transaction(json_data)
                 if transaction is None:
                     print("Transaction was discaraded")
                     #If transaction could not be recovered, or was discarded, continue

@@ -9,7 +9,7 @@ class AccidentTransaction(Transaction):
         super().__init__(emitter, new_transaction=new_transaction)
     
     
-    def validate(self, blockchain):
+    def validate_transaction_content(self, blockchain):
         pass
 
 
