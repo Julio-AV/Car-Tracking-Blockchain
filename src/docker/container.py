@@ -121,7 +121,9 @@ class Container:
         if ret_code == 0:
             print(f"Container {self.name} was controled successfuly")
         elif ret_code == 127:
-            logging.error(f"Error executing command in container {self.name}")
+            logging.info(f"Error executing command in container {self.name}")
+        elif ret_code == 130:
+            logging.info("Script terminated with CTRL+C")
         else:
             raise Exception(f"Error controling container {self.name}")
         
