@@ -75,9 +75,32 @@ class Block:
         """Prepare the block for broadcasting by calculating its hash, merkle root and timestamp"""
         self.sign_block(private_key=private_key)
 
-    def validate(self):
+    def validate(self, public_keys: dict, blockchain: list):
         """Validate the block"""
-        pass
+        # Validate the block signature
+        if self.validate_signature(public_keys[self.header.emitter]) == False:
+            print("Block signature is not valid")
+            return False
+        
+        # Validate the transactions
+        for transaction in self.transactions:
+            try:
+                public_key = public_keys[transaction.emitter]
+            except KeyError:
+                print(f"Transaction {transaction} was not valid, emitter {transaction.emitter} not found")
+                return False
+            if not transaction.validate(public_key, blockchain):
+                print(f"Transaction {transaction} was not valid")
+                return False
+        # Validate the merkle root
+        if self.header.merkle_root != self.calculate_merkle_root():
+            print("Merkle root is not valid")
+            return False
+        # Validate the block hash
+        if self.header.block_hash != self.calculate_hash():
+            print("Block hash is not valid")
+            return False
+        return True
     
     def _as_dict(self):
         """Return the block as a dictionary"""

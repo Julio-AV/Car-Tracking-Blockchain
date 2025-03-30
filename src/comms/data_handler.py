@@ -41,16 +41,16 @@ class DataHandler:
                 continue
             if "header" in json_data and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
-                #TODO: Create the block and add it to node if not in blockchain
                 block = TransactionFactory.create_block(received_data)
                 if block is None:
                     print("Block was discaraded")
                     #If block could not be recovered, or was discarded, continue
                     continue
                 elif block not in self.blockchain:
-                    #If block is not in the blockchain, add it to the blockchain
-
-                    block.validate_signature(self.public_keys[block.header.emitter])
+                    #If block is not in the blockchain, validate it, and if it's valid, add it to the blockchain
+                    is_valid_block = block.validate(self.public_keys, self.blockchain)
+                    if is_valid_block:
+                        self.blockchain.append(block)
             else:
                 transaction = TransactionFactory.create_transaction(transaction)
                 if transaction is None:
@@ -74,18 +74,3 @@ class DataHandler:
                     self.queue_to_node.put(transaction.serialize())
                 else:
                     print(f"Transaction {transaction} was not valid")
-
-
-                
-
-
-
-    def validate_block(self, block: Block):
-        """
-        This function will accept a block from the network and validate it
-        """
-        block.validate_signature(self.public_keys[block.header.validator_sign])
-        #missing block.validate
-        if block not in self.blockchain: #Test this, not in uses __eq__ method
-            self.blockchain.append(block)
-            self.queue_to_node.put(block)
