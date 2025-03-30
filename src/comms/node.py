@@ -20,6 +20,7 @@ class Node:
         self.queue_to_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (dataHandler is the producer, and node is the consumer)
         self.queue_from_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (Node is the producer, and dataHandler is the consumer)
         self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain)
+        print(f"Node {self.name} started successfully")
     
     def send(self):
         """
@@ -36,7 +37,10 @@ class Node:
         """
         while True:
             data_to_send = self.queue_from_connectionHandler.get()
+            print("Data received from connection handler")
+            print(data_to_send)
             self.queue_to_dataHandler.put(data_to_send)
+
     def generate_data(self):
         """
         Generate data to be sent to the network, this function will be overriden by simulation scenarios nodes
@@ -47,10 +51,10 @@ class Node:
         """
         Start all node processes
         """
-        threading.Thread(target=self.send).start()
+        thread_to_be_waited = threading.Thread(target=self.send) #We store it in a variable so the main thread waits infinitely for it
+        thread_to_be_waited.start() #Start the thread
         threading.Thread(target=self.receive).start()
-        threading.Thread(target=self.generate_data).start()
         self.connection_handler.start()
         self.data_handler.start()
-
-
+        threading.Thread(target=self.generate_data).start()
+        thread_to_be_waited.join() #Wait for the thread to finish (infinite waiting)

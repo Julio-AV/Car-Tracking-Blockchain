@@ -13,6 +13,6 @@ COPY blockchain/ ./blockchain
 COPY comms/ ./comms
 COPY scenarios/one_on_one/main.py .
 COPY utils/ ./utils
-
+RUN mkdir data
 
 CMD tail -f /dev/null 
