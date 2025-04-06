@@ -36,5 +36,20 @@ class ManagerNode(Node):
         manipulated_transaction.sign(fake_key)
         serialized_manipulated_transaction = manipulated_transaction.serialize()
         self.queue_to_connectionHandler.put(serialized_manipulated_transaction)
+        print("Manipulated transaction sent to connection handler")
+        #Generate a block with the transaction
+        block = Block("genesis_block", 1, [example_transaction], self.name)
+        block.prepare_block(self.private_key)
+        serialized_block = block.serialize()
+        self.queue_to_connectionHandler.put(serialized_block)
+        print("Block sent to connection handler")
+        #Generate a block with the manipulated transaction
+        block = Block("genesis_block", 2, [manipulated_transaction], self.name)
+        block.prepare_block(self.private_key)
+        serialized_block = block.serialize()
+        self.queue_to_connectionHandler.put(serialized_block)
+        print("Manipulated block sent to connection handler")
+            
+        
 
         

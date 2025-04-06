@@ -82,7 +82,7 @@ class ConnectionHandler:
                 
                 self.open_connection(IP, ports)
 
-    def listen_once(self,  client_ip: str, size: int = 1024):
+    def listen_once(self,  client_ip: str, size: int = 8192):
         """
         This function listens to a socket once
         """
@@ -92,7 +92,7 @@ class ConnectionHandler:
             with open("mi_archivo.txt", "a") as archivo:
                     archivo.write("Data received!\n")  # Escribir una línea
             if data:
-                print(f"data received: {data.decode('utf-8')}")
+                #print(f"data received: {data.decode('utf-8')}")
                 self.queue_to_node.put(data)   #No need to decode the data since our data_handler will do it
             else:
                 print("Client closed connection.")

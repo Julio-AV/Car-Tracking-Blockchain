@@ -77,7 +77,6 @@ class TransactionFactory:
             #Create transactions from block
             transactions = []
             for transaction in deserialized_block['transactions']:
-                print(transaction)
                 transactions.append(TransactionFactory.create_transaction(transaction))
             block = Block(header.previous_hash, header.block_number, transactions, header.emitter, new_block=False)
             block.header = header

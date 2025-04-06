@@ -65,3 +65,6 @@ if __name__ == '__main__':
     recovered_transaction = TransactionFactory.create_transaction(serialized)
     print(recovered_transaction.serialize())
     print(recovered_transaction.validate_signature(public_key))
+    import sys
+
+    print(sys.getsizeof(serialized))

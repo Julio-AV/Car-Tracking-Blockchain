@@ -42,16 +42,22 @@ class DataHandler:
             if "header" in json_data and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
                 block = TransactionFactory.create_block(json_data)
-                if block is None:
+                if block is None: 
                     print("Block was discaraded")
                     #If block could not be recovered, or was discarded, continue
                     continue
                 elif block not in self.blockchain:
+                    with open("logs.txt", "a") as logs_file:
+                        logs_file.write("Validating block...\n") 
                     #If block is not in the blockchain, validate it, and if it's valid, add it to the blockchain
                     is_valid_block = block.validate(self.public_keys, self.blockchain)
                     if is_valid_block:
                         self.blockchain.append(block)
+                        self.queue_to_node.put(block.serialize())
+                        print(f"Block: \n {str(block.header)} \n was added to the blockchain")
                     else:
+                        with open("logs.txt", "a") as logs_file:
+                            logs_file.write("Block was validated unsuccessfully\n") 
                         print("Block was discarded...")
             else:
                 transaction = TransactionFactory.create_transaction(json_data)
@@ -67,7 +73,7 @@ class DataHandler:
                 try:
                     is_valid = transaction.validate(self.public_keys[transaction.emitter], self.blockchain)
                 except KeyError:
-                    print(f"Transaction {transaction} was not valid, emitter {transaction.emitter} not found")
+                    print(f"Transaction {transaction.transaction_hash} was not valid, emitter {transaction.emitter} not found")
                     is_valid = False
                 if is_valid:
                     #If the transaction is valid, add it to the transaction list and the queue to node
