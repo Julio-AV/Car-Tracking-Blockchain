@@ -46,19 +46,23 @@ class DataHandler:
                     print("Block was discaraded")
                     #If block could not be recovered, or was discarded, continue
                     continue
-                elif block not in self.blockchain:
+                elif block in self.blockchain:
+                    #If block was already received, continue
+                    print("Block was already received")
+                    continue
+
+                with open("logs.txt", "a") as logs_file:
+                    logs_file.write("Validating block...\n")
+                #If block is not in the blockchain, validate it, and if it's valid, add it to the blockchain
+                is_valid_block = block.validate(self.public_keys, self.blockchain)
+                if is_valid_block:
+                    self.blockchain.append(block)
+                    self.queue_to_node.put(block.serialize())
+                    print(f"Block: \n {str(block.header)} \n was added to the blockchain")
+                else:
                     with open("logs.txt", "a") as logs_file:
-                        logs_file.write("Validating block...\n") 
-                    #If block is not in the blockchain, validate it, and if it's valid, add it to the blockchain
-                    is_valid_block = block.validate(self.public_keys, self.blockchain)
-                    if is_valid_block:
-                        self.blockchain.append(block)
-                        self.queue_to_node.put(block.serialize())
-                        print(f"Block: \n {str(block.header)} \n was added to the blockchain")
-                    else:
-                        with open("logs.txt", "a") as logs_file:
-                            logs_file.write("Block was validated unsuccessfully\n") 
-                        print("Block was discarded...")
+                        logs_file.write("Block was not valid\n") 
+                    print("Block was discarded...")
             else:
                 transaction = TransactionFactory.create_transaction(json_data)
                 if transaction is None:
