@@ -8,7 +8,7 @@ from cryptography.exceptions import InvalidSignature
 import json
 class Block:
     def __init__(self, previous_hash, block_number ,transactions: list[Transaction], emmiter, new_block = True):
-        """Signature is made from outside, since python is a piece of shit and doesn't allow function overcharging"""
+        """Signature is made from outside, since python doesn't allow function overcharging"""
         self.header: Header = Header(previous_hash= previous_hash, block_number= block_number, emmiter=emmiter)
         self.transactions = transactions
         if new_block:
@@ -132,8 +132,8 @@ class Block:
             return False
     def pretty_print(self):
         """Print the block in a structured, visually appealing way"""
-        width = 100  # Ancho total del bloque
-        padding = 20  # Espaciado para alinear bien las claves y valores
+        width = 100  
+        padding = 20 
 
         print("+" + "-" * (width - 1) + "+")
         print("|" + " " * ((width // 2) - 3) + "BLOCK" + " " * ((width // 2) - 3) + "|")

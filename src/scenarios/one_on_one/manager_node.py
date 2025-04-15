@@ -44,7 +44,7 @@ class ManagerNode(Node):
         self.queue_to_connectionHandler.put(serialized_block)
         print("Block sent to connection handler")
         #Generate a block with the manipulated transaction
-        block = Block("genesis_block", 2, [manipulated_transaction], self.name)
+        block = Block("some_other_block", 2, [manipulated_transaction], self.name)
         block.prepare_block(self.private_key)
         serialized_block = block.serialize()
         self.queue_to_connectionHandler.put(serialized_block)
