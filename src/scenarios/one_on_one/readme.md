@@ -7,4 +7,4 @@ You don't need to create the machines by yourself, the code will do it for you!
 
 **The machines will always execute the main.py file, so remember to put their path, and all their dependencies in the copy funcions.**
 
-![Scheme:](one-on-one.png)
+![Scheme:](one_on_one_scheme.png)
