@@ -76,12 +76,12 @@ def clear_key_files(public_file='data/public_keys.json', private_file='data/priv
         print(f"Error deleting key files: {e}")
 
 
-def save_node_name(node_name, node_file='data/node_info.json'):
+def save_node_info(node_info: dict, node_file='data/node_info.json'):
     """
     Write a node name to a file (file is a JSON with a single key "node_name")
     """
     with open(node_file, 'w') as file:
-        json.dump({"node_name": node_name}, file, indent=4)
+        json.dump(node_info, file, indent=4)
     print("Node name saved successfully.")
 
 def load_node_name(node_file='data/node_info.json'):
@@ -92,6 +92,19 @@ def load_node_name(node_file='data/node_info.json'):
         with open(node_file, 'r') as file:
             data = json.load(file)
             return data.get("node_name")
+    except FileNotFoundError:
+        raise FileNotFoundError("Node info file not found.")
+    except json.JSONDecodeError:
+        raise ValueError("Node info file is not in valid JSON format.")
+    
+def load_node_IP(node_file='data/node_info.json'):
+    """
+    Load node name from a file (file is a JSON with a single key "IP")
+    """
+    try:
+        with open(node_file, 'r') as file:
+            data = json.load(file)
+            return data.get("IP")
     except FileNotFoundError:
         raise FileNotFoundError("Node info file not found.")
     except json.JSONDecodeError:

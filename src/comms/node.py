@@ -1,6 +1,6 @@
 from .connection_handler import ConnectionHandler
 from .data_handler import DataHandler
-from utils.key_handler import load_keys, load_node_name
+from utils.key_handler import load_keys, load_node_name, load_node_IP
 import queue
 import multiprocessing
 import threading
@@ -11,6 +11,7 @@ class Node:
     """
     def __init__(self):
         self.name = load_node_name() #Name of the node, e.g. DGT-1
+        self.IP = load_node_IP() #IP of the node
         self.public_keys, self.private_key = load_keys(self.name) #Public keys and private key from a node
         self.port = 5500    #In case of deploying a docker container, this port needs to be the same that you openned in the container
         self.blockchain = [] #List of blocks

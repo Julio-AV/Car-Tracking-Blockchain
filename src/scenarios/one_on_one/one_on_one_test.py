@@ -13,10 +13,13 @@ from docker import create_network
 #   Create keys and node information
 #------------------------------------------------
 from utils.key_handler import generate_and_store_keys, clear_key_files
-from utils.key_handler import save_node_name, clear_node_files
+from utils.key_handler import  save_node_info, clear_node_files
 node_names = ["autonomous_node", "manager_node"]
 generate_and_store_keys(node_names)
 
+
+AUTONOMOUS_NODE_INFO = {"node_name": "autonomous_node", "IP": tc_ip}
+save_node_info(AUTONOMOUS_NODE_INFO, "data/node_info.json")
 
 
 DEPENDENCIES = ["comms", "utils", "blockchain"]
@@ -41,10 +44,6 @@ for dependency in DEPENDENCIES:
 for info in CONTAINER_INFO:
     test_container.copy(info, DATA_PATH)
 
-#Copy the node name to it's container
-AUTONOMOUS_NODE_NAME = "autonomous_node"
-save_node_name(AUTONOMOUS_NODE_NAME, "data/node_info.json")
-test_container.copy("data/node_info.json", DATA_PATH)
 
 test_container.wake()
 

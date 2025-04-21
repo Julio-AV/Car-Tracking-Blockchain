@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 class Transaction(ABC):
     def __init__(self, emitter, new_transaction = True):
-        """Signature is made from outside, since python is a piece of shit and doesn't allow function overcharging"""
+        """Signature is made from outside, since python doesn't allow function overcharging"""
         #Transaction type is handled by subclasses
         #New transaction will be true if we are creating a transaction and false if we are deserializing a transaction from the network
         self.emitter = emitter
