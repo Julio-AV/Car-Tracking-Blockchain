@@ -1,42 +1,43 @@
 import os
 import random
-def write_list_to_csv(file_name, data_list):
+import json
+
+def write_connections_to_file(connections: dict, file_name="data/connections.json"):
     """
-    Writes data from a list to a CSV file.
+    Writes the connections dictionary to a file in JSON format.
 
     Args:
-        file_name (str): Name of the output CSV file.
-        data_list (list): List of data to write. 
-            Each element of the list should be a list or tuple.
+        connections (dict): A dictionary where keys are IP addresses and values are lists of connected IP addresses.
+        file_name (str): The name of the output file.
     """
     try:
-        with open(file_name, mode='w', newline='', encoding='utf-8') as csv_file:
-            for data in data_list:
-                csv_file.write(data+"\n")
-        
-        print(f"Data successfully written to {file_name}")
+        with open(file_name, mode='w', encoding='utf-8') as file:
+            json.dump(connections, file, indent=4)
+        print(f"Connections successfully written to {file_name}")
     except Exception as e:
-        print(f"Error writing to CSV file: {e}")
+        print(f"Error writing to file: {e}")
 
 
-def read_list_from_csv(file_name):
+def read_connections_from_file(IP, file_name="data/connections.json"):
     """
-    Reads data from a CSV file line by line and returns a list of strings.
+    Reads the connections from a file in JSON format.
 
     Args:
-        file_name (str): The name of the input CSV file.
+        IP (str): The IP address to look for in the connections.
+        file_name (str): The name of the input file.
 
     Returns:
-        list: A list of strings, each representing a line in the file.
+        list: A list of connected IP addresses.
     """
     try:
-        with open(file_name, mode='r', encoding='utf-8') as csv_file:
-            # Read all lines and strip newline characters
-            data_list = [line.strip() for line in csv_file]
-        print(f"Data successfully read from {file_name}")
-        return data_list
-    except Exception as e:
-        print(f"Error reading from CSV file: {e}")
+        with open(file_name, mode='r', encoding='utf-8') as file:
+            connections = json.load(file)
+            return connections.get(IP)
+    except FileNotFoundError:
+        print(f"File {file_name} not found.")
+        return []
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON from {file_name}.")
         return []
     
 def delete_file(file_name):

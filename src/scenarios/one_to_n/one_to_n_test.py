@@ -27,8 +27,9 @@ TC_IMAGE = "socket_image"
 MAIN_PATH = "scenarios/one_to_n/main.py"
 IP_FILE = "IPs.csv"
 IPs = [TC_IP + str(i + IP_OFFSET) for i in range(N_TC)]
+connections = IP_file_handler.generate_connected_network(IPs)
 
-IP_file_handler.write_list_to_csv(IP_FILE, IPs)
+IP_file_handler.write_connections_to_file(connections, IP_FILE)  #Write the connections to a file
 
 create_network(TC_IP + "0", NETWORK)
 
