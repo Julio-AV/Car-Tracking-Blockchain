@@ -12,8 +12,10 @@ from docker import create_network
 #------------------------------------------------
 #   Create keys and node information
 #------------------------------------------------
-from utils.key_handler import generate_and_store_keys, clear_key_files
-from utils.key_handler import  save_node_info, clear_node_files
+from utils.key_handler import generate_and_store_keys, clear_key_files, save_node_info, clear_node_files
+from utils.IP_file_handler import generate_connected_network, write_connections_to_file, delete_connections_file
+tc_ip = "192.168.3.2" #Autonomous container IP
+m_ip = "192.168.3.3" #Manager IP
 node_names = ["autonomous_node", "manager_node"]
 generate_and_store_keys(node_names)
 
@@ -21,14 +23,17 @@ generate_and_store_keys(node_names)
 AUTONOMOUS_NODE_INFO = {"node_name": "autonomous_node", "IP": tc_ip}
 save_node_info(AUTONOMOUS_NODE_INFO, "data/node_info.json")
 
+#Generate connections
+generated_network = generate_connected_network([tc_ip, m_ip])
+write_connections_to_file(generated_network)
+#------------------------------------------------
 
 DEPENDENCIES = ["comms", "utils", "blockchain"]
-CONTAINER_INFO = ["data/node_info.json", "data/public_keys.json", "data/private_keys.json"]
+CONTAINER_INFO = ["data/node_info.json", "data/public_keys.json", "data/private_keys.json", "data/connections.json"]
 DATA_PATH = "/app/data/"
 container_main_path = "/app/"
 #Autonomous container
 tc_name = "one_on_one_auto"
-tc_ip = "192.168.3.2"
 tc_real_port = 5500
 tc_VM_port = 5500
 NETWORK = "test_network"
@@ -51,7 +56,6 @@ test_container.wake()
 
 #Your container (manager)
 m_name = "manager"
-m_ip = "192.168.3.3"
 m_real_port = 5501
 m_VM_port = 5500
 m_image = "manager_image"
@@ -68,7 +72,8 @@ for info in CONTAINER_INFO:
 #Copy the manager node implementation to the container
 m_container.copy(manager_node_implementation, container_main_path+"/comms")
 MANAGER_NODE_NAME = "manager_node"
-save_node_name(MANAGER_NODE_NAME, "data/node_info.json")
+MANAGER_NODE_INFO = {"node_name": MANAGER_NODE_NAME, "IP": m_ip}
+save_node_info(MANAGER_NODE_INFO)
 m_container.copy("data/node_info.json", DATA_PATH)
 m_container.wake_and_control()
 
@@ -78,4 +83,5 @@ input("\nPress enter to remove containers:")
 test_container.remove_container()
 clear_key_files()
 clear_node_files()
+delete_connections_file()
 m_container.remove_container()
