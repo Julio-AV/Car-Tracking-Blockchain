@@ -4,6 +4,7 @@ from utils.key_handler import load_keys, load_node_name, load_node_IP
 import queue
 import multiprocessing
 import threading
+import time
 class Node:
     """
     This class works as a mediator between the connection_handler and the data_handler, connection_handler will use queue.Queue since connection_handler uses
@@ -17,7 +18,7 @@ class Node:
         self.blockchain = [] #List of blocks
         self.queue_to_connectionHandler = queue.Queue()   #Queue between node and ConnectionHandler (ConnectionHandler is the producer, and node is the consumer)
         self.queue_from_connectionHandler = queue.Queue() #Queue between node and ConnectionHandler (Node is the producer, and ConnectionHandler is the consumer)
-        self.connection_handler = ConnectionHandler(self.port, self.queue_from_connectionHandler, self.queue_to_connectionHandler)
+        self.connection_handler = ConnectionHandler(self.IP, self.port, self.queue_from_connectionHandler, self.queue_to_connectionHandler)
         self.queue_to_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (dataHandler is the producer, and node is the consumer)
         self.queue_from_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (Node is the producer, and dataHandler is the consumer)
         self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain)
@@ -55,5 +56,6 @@ class Node:
         threading.Thread(target=self.receive).start()
         self.connection_handler.start()
         self.data_handler.start()
+        time.sleep(1) #Give time to the connection handler and data handler to start
         threading.Thread(target=self.generate_data).start()
         thread_to_be_waited.join() #Wait for the thread to finish (infinite waiting)
