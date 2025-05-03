@@ -2,10 +2,13 @@ from comms.node import Node
 from blockchain.structure.carTransaction import CarTransaction
 from blockchain.structure.block import Block
 from cryptography.hazmat.primitives.asymmetric import rsa
+from utils.IP_file_handler import read_connections_from_file
+import time
 class ManagerNode(Node):
     #inherit node class and extend it to add manager specific functionality
     def __init__(self):
         super().__init__()
+        print(f"Manager node will open connections with: {read_connections_from_file(self.IP)}")
 
     def generate_data(self):
         #Override the start method to add manager specific functionality
@@ -37,6 +40,7 @@ class ManagerNode(Node):
         serialized_manipulated_transaction = manipulated_transaction.serialize()
         self.queue_to_connectionHandler.put(serialized_manipulated_transaction)
         print("Manipulated transaction sent to connection handler")
+        time.sleep(1)
         #Generate a block with the transaction
         block = Block("genesis_block", 1, [example_transaction], self.name)
         block.prepare_block(self.private_key)
@@ -44,6 +48,7 @@ class ManagerNode(Node):
         self.queue_to_connectionHandler.put(serialized_block)
         print("Block sent to connection handler")
         #Generate a block with the manipulated transaction
+        time.sleep(1)
         block = Block("some_other_block", 2, [manipulated_transaction], self.name)
         block.prepare_block(self.private_key)
         serialized_block = block.serialize()
