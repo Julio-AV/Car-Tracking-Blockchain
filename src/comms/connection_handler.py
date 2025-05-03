@@ -4,18 +4,20 @@ import threading
 import queue
 import logging
 from typing import Union
+from utils.IP_file_handler import read_connections_from_file
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class ConnectionHandler:
-    def __init__(self, port: int, queue_to_node: queue.Queue, queue_from_node: queue.Queue, IP: str = "0.0.0.0"):
+    def __init__(self, IP: str ,port: int, queue_to_node: queue.Queue, queue_from_node: queue.Queue):
         self.queue_to_node = queue_to_node
         self.queue_from_node = queue_from_node
         self.port = port 
         self.IP = IP;
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind((self.IP, self.port))
+        self.server_socket.bind(("0.0.0.0", self.port)) #Bind socket to all interfaces
         self.server_socket.listen(5)
         self.connections_lock = Lock()
         self.open_connections = {}   #Dictionary that stores connections as {IP: socket}
+        self.connections_to_open = read_connections_from_file(self.IP) #List of connections that the node should open once it starts
 
     def safe_close(self, client_addr: str) -> None:
         sock = self.open_connections[client_addr]
@@ -157,11 +159,15 @@ class ConnectionHandler:
         """
         Start all threads from the connection handler
         """
-        accepter = threading.Thread(target=self.accept_and_launch)
+        accepter = threading.Thread(target=self.accept_and_launch) #Thread to accept connections
         accepter.start()
-        broadcaster = threading.Thread(target=self.consume_and_broadcast)
+        broadcaster = threading.Thread(target=self.consume_and_broadcast) # Thread that will listen to the queue and broadcast the messages
         broadcaster.start()
-        
+        for IP in self.connections_to_open:
+            if IP != self.IP: #Avoid auto connection
+                logging.info(f"Opening connection with {IP}")
+                self.open_connection(IP, self.port)
+
     def launch(self, IP: str):
         """
         When the handler opens a connection, it will start a thread to listen to that connection
