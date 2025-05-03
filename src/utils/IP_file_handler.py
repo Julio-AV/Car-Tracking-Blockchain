@@ -40,7 +40,7 @@ def read_connections_from_file(IP, file_name="data/connections.json"):
         print(f"Error decoding JSON from {file_name}.")
         return []
     
-def delete_file(file_name):
+def delete_connections_file(file_name = "data/connections.json"):
     """
     Deletes a file if it exists.
 
