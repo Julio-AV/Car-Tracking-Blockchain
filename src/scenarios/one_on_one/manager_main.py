@@ -4,5 +4,4 @@ from comms.manager_node import ManagerNode #This might seem like an error, but o
 if __name__ == "__main__":
     print(f"Data path: {os.system("ls data")}")
     node: ManagerNode = ManagerNode()
-    node.connection_handler.open_connection("192.168.3.2", 5500) #Ip of the machine, fix it to a proper manner in the future
     node.start()
