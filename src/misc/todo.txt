@@ -5,10 +5,6 @@ Connection handler:
 
 - Complete simulations 
 
-Blockchain:
-    Complete transaction validation
-    Complete block validation
-
 
 Data handler:
     - add transaction list clearing (pending)
@@ -28,8 +24,7 @@ Refactoring:
 
 Possible errors and debugging:
     Possible error decoding digital sign after sending through sockets
+    Only 5 connections are accepted per socket
 
 Seguir el hilo:
-    - Tienes que hacer lo de las IPs bien, es decir, que el connection handler se conecte a las IPs que debe (con el csv de IPs a conectar)
-    - Vuelve a testear el de one on one, porque has metido lo de que sepan las IPs
-    - Y hacer bien lo del one on one para que el manager conecte automáticamente y todos los nodos también (connection_handler)
+    - Ahora tienes que hacer el escenario de one to n
