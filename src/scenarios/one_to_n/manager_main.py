@@ -1,26 +1,26 @@
-import socket
-import queue
-from comms.connection_handler import ConnectionHandler
+import os
+from comms.node import Node
+from blockchain.structure.carTransaction import CarTransaction
+from blockchain.structure.block import Block
+from cryptography.hazmat.primitives.asymmetric import rsa
+from utils.IP_file_handler import read_connections_from_file
 import time
-import utils.IP_file_handler as IP_file_handler
+class ManagerNode(Node):
+    #inherit node class and extend it to add manager specific functionality
+    def __init__(self):
+        super().__init__()
+        print(f"Manager node will open connections with: {read_connections_from_file(self.IP)}")
+
+    def generate_data(self):
+        #Override the start method to add manager specific functionality
+        print("Welcome aboard, manager!")
+        time.sleep(1)
+        
+            
+        
+
+        
 if __name__ == "__main__":
-    machine_IP = "192.168.3.2"
-    machine_port = 5500
-    data_queue = queue.Queue()
-    handler = ConnectionHandler(5500, data_queue)
-    IPs_path = "IPs.csv"
-    IPs = IP_file_handler.read_list_from_csv(IPs_path)
-    handler.open_multiple_connections(IPs)
-    time.sleep(2)
-    handler.broadcast("Soldiers! Do you hear me?")
-    print("Data sent")
-    for i in IPs:
-        data = handler.data_queue.get()
-        print(f"{data}_{i}")
-    handler.broadcast("Positions, now!")
-    print("Second data sent")
-    for i in IPs:
-        data = handler.data_queue.get()
-        print(f"{data}_{i}")
-    for IP in handler.open_connections.keys():
-        handler.safe_close(IP)
+    print(f"Data path: {os.system("ls data")}")
+    node: ManagerNode = ManagerNode()
+    node.start()
