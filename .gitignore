@@ -9,3 +9,4 @@ venv/
 *.fls
 *.log
 *.synctex.gz
+src/data/
