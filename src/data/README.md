@@ -1,0 +1,1 @@
+This directory is to copy the temporary simulation files that will be copied to the containers
