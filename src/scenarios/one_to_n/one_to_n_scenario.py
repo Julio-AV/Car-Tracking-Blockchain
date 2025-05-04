@@ -85,7 +85,7 @@ for i in range(N_TC):
     test_container.copy(MAIN_PATH, CONTAINER_MAIN_PATH)  #Copy file that will be executed once the container wakes
     for dependency in DEPENDENCIES:
         #Copy the dependencies
-        test_container.copy(DEPENDENCIES[i], CONTAINER_MAIN_PATH)  
+        test_container.copy(dependency, CONTAINER_MAIN_PATH)  
     test_container.wake(dettached=True)
     container_list.append(test_container)
 
@@ -97,6 +97,8 @@ M_TEST_SCRIPT_PATH = "scenarios/one_to_n/manager_main.py"
 m_container = Container(M_NAME, m_real_port, M_VM_PORT, M_IP, DOCKER_NETWORK_NAME, M_IMAGE)
 m_container.create()
 m_container.copy(M_TEST_SCRIPT_PATH, CONTAINER_MAIN_PATH) #Copy manager script that YOU will manually execute inside the container
+manager_node_info = {"node_name": M_NAME, "IP": M_IP}
+save_node_info(manager_node_info) #Save the node info for the manager container
 for dependency in DEPENDENCIES:
     #Copy the dependencies
     m_container.copy(dependency, CONTAINER_MAIN_PATH)
