@@ -41,7 +41,7 @@ class Node:
             data_to_send = self.queue_from_connectionHandler.get()
             self.queue_to_dataHandler.put(data_to_send)
 
-    def generate_data(self):
+    def operate(self):
         """
         Generate data to be sent to the network, this function will be overriden by simulation scenarios nodes
         """
@@ -57,5 +57,5 @@ class Node:
         self.connection_handler.start()
         self.data_handler.start()
         time.sleep(1) #Give time for the connection handler and data handler to start
-        threading.Thread(target=self.generate_data).start()
+        threading.Thread(target=self.operate).start()
         thread_to_be_waited.join() #Wait for the thread to finish (infinite waiting)

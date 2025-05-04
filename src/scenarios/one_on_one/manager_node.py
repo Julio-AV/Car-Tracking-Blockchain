@@ -10,7 +10,7 @@ class ManagerNode(Node):
         super().__init__()
         print(f"Manager node will open connections with: {read_connections_from_file(self.IP)}")
 
-    def generate_data(self):
+    def operate(self):
         #Override the start method to add manager specific functionality
         print("Generating data...")
         example_transaction = CarTransaction(
