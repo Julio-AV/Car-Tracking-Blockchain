@@ -1,1 +1,1 @@
-This directory is to copy the temporary simulation files that will be copied to the containers
+This directory is to copy the temporary simulation files that will be copied to the containers, it should be empty if data is removed after simulations.
