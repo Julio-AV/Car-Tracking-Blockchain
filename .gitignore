@@ -9,4 +9,5 @@ venv/
 *.fls
 *.log
 *.synctex.gz
-src/data/
+src/data/*
+!src/data/README.md
