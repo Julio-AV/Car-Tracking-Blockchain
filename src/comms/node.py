@@ -11,17 +11,21 @@ class Node:
     threading because it does plenty of I/O operation, and data_handler will use multiprocessing.Queue since data_handler uses multiprocessing because it does plenty of CPU operations
     """
     def __init__(self):
+        
         self.name = load_node_name() #Name of the node, e.g. DGT-1
         self.IP = load_node_IP() #IP of the node
         self.public_keys, self.private_key = load_keys(self.name) #Public keys and private key from a node
         self.port = 5500    #In case of deploying a docker container, this port needs to be the same that you openned in the container
+        
         self.blockchain = [] #List of blocks
         self.queue_to_connectionHandler = queue.Queue()   #Queue between node and ConnectionHandler (ConnectionHandler is the producer, and node is the consumer)
         self.queue_from_connectionHandler = queue.Queue() #Queue between node and ConnectionHandler (Node is the producer, and ConnectionHandler is the consumer)
         self.connection_handler = ConnectionHandler(self.IP, self.port, self.queue_from_connectionHandler, self.queue_to_connectionHandler)
         self.queue_to_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (dataHandler is the producer, and node is the consumer)
         self.queue_from_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (Node is the producer, and dataHandler is the consumer)
-        self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain)
+        self.process_manager = multiprocessing.Manager() #Manager to share data between processes
+        self.transaction_list = self.process_manager.list() #List of transactions, this will be shared between node and data handler
+        self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain, self.transaction_list)
         print(f"Node {self.name} started successfully")
     
     def send(self):
