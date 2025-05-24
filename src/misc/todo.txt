@@ -23,8 +23,10 @@ Refactoring:
 
 
 Possible errors and debugging:
-    Possible error decoding digital sign after sending through sockets
     Only 5 connections are accepted per socket
 
 Seguir el hilo:
-    - Ahora tienes que hacer el escenario de one to n
+    - Hacer que cuando el data_handler recibe uno bloque, borre del pool de transacciones locales las transacciones que están dentro del bloque (o no)
+    - Testear el ejemplo de one to n
+    - Hacer el escenario real jefe
+    
