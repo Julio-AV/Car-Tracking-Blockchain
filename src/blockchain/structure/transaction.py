@@ -90,4 +90,4 @@ class Transaction(ABC):
             print("Transaction rejected due to value error: ", e)
             return False
     def __eq__(self, value):
-        return self._as_dict() == value._as_dict()
+        return isinstance(value, Transaction) and self._as_dict() == value._as_dict()
