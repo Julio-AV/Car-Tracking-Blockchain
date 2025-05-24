@@ -30,7 +30,7 @@ class ManagerNode(Node):
         
         while True:
             #Menu to introduce data to the network
-            introduced_data = input("Introduce data to the network (1: block, 2: transaction, 3: manipulate next transaction received, 4: print transaction pool,exit: exit): ")
+            introduced_data = input("Introduce data to the network (1: block, 2: transaction, 3: manipulate next transaction received, 4: print transaction pool, 5: print blockchain ,exit: exit): ")
             if introduced_data == "exit":
                 print("Exiting...")
                 break
@@ -92,7 +92,11 @@ class ManagerNode(Node):
                     print(transaction.serialize())
                     
                 
-
+            elif introduced_data == "5":
+                # print blocks in the blockchain
+                print(f"Blocks in the blockchain: {len(self.blockchain)}")
+                for block in self.blockchain:
+                    print(block.pretty_print())
 
             else:
                 print("Invalid option, please try again.")
