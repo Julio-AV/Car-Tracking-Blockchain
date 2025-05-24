@@ -65,6 +65,9 @@ class DataHandler:
                     print("Block was discarded...")
             else:
                 transaction = TransactionFactory.create_transaction(json_data)
+                
+                with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write("Data was a transaction\n") 
                 if transaction is None:
                     print("Transaction was discaraded")
                     #If transaction could not be recovered, or was discarded, continue
@@ -75,7 +78,10 @@ class DataHandler:
                     continue
                     
                 try:
+                    
                     is_valid = transaction.validate(self.public_keys[transaction.emitter], self.blockchain)
+                    with open("mi_archivo.txt", "a") as archivo:
+                        archivo.write(f"is transaction valid? {is_valid}\n") 
                 except KeyError:
                     print(f"Transaction {transaction.transaction_hash} was not valid, emitter {transaction.emitter} not found")
                     is_valid = False
@@ -83,6 +89,8 @@ class DataHandler:
                     #If the transaction is valid, add it to the transaction list and the queue to node
                     print(f"Accepted transaction {transaction}")
                     self.transaction_list.append(transaction)
+                    for transaction in self.transaction_list:
+                        print(f"Transaction in the data handler: {transaction.timestamp}")
                     self.queue_to_node.put(transaction.serialize())
                 else:
                     print(f"Transaction {transaction} was not valid")

@@ -91,10 +91,11 @@ class ConnectionHandler:
         client_socket = self.open_connections[client_ip]
         try:
             data = client_socket.recv(size)
-            with open("mi_archivo.txt", "a") as archivo:
-                    archivo.write("Data received!\n")  # Escribir una línea
             if data:
                 #print(f"data received: {data.decode('utf-8')}")
+                
+                with open("mi_archivo.txt", "a") as archivo:
+                    archivo.write("Data received!\n") 
                 self.queue_to_node.put(data)   #No need to decode the data since our data_handler will do it
             else:
                 print("Client closed connection.")
@@ -133,9 +134,7 @@ class ConnectionHandler:
         client_socket.sendall(encoded_msg)
     
     def encode_msg(self, msg: str) -> bytes:
-        """
-        TODO: Encoding to JSON or whatever type of communication will be using
-        """
+        
         return msg.encode()
     
     def consume_and_broadcast(self):
