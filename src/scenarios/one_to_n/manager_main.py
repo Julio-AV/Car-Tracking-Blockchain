@@ -107,6 +107,5 @@ class ManagerNode(Node):
 
         
 if __name__ == "__main__":
-    print(f"Data path: {os.system("ls data")}")
     node: ManagerNode = ManagerNode()
     node.start()
