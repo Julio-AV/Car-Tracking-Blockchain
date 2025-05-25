@@ -46,7 +46,7 @@ class ManagerNode(Node):
                     print("Creating genesis block...")
                 else:
                     #Create block with the last block hash
-                    block = Block(self.blockchain[-1].header.hash, len(self.blockchain), self.data_handler.transaction_list, self.name)
+                    block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), self.data_handler.transaction_list, self.name)
                     print(f"Creating block number {len(self.blockchain)}...")
                 block.prepare_block(self.private_key)
                 serialized_block = block.serialize()
@@ -66,7 +66,6 @@ class ManagerNode(Node):
                 self.queue_to_connectionHandler.put(serialized_transaction)
                 print("Transaction sent to connection handler")
             elif introduced_data == "3":
-                #TODO: Implement transaction manipulation: when data is received from queue, manipulate it and send it back to the connection handler, implement it with a flag for the queue handler
                 print("Manipulating next transaction received...")
                 self.manipulate = True
                 data_to_manipulate = self.queue_from_connectionHandler.get()
@@ -89,7 +88,7 @@ class ManagerNode(Node):
                 # print transactions in the data handler
                 print(f"Transactions in the data handler: {len(self.data_handler.transaction_list)}")
                 for transaction in self.data_handler.transaction_list:
-                    print(transaction.serialize())
+                    print(transaction.timestamp)
                     
                 
             elif introduced_data == "5":
