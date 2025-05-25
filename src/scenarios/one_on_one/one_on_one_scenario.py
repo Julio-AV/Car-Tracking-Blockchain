@@ -59,7 +59,7 @@ m_name = "manager"
 m_real_port = 5501
 m_VM_port = 5500
 m_image = "manager_image"
-
+currently_tested_script = "scenarios/realistic_scenario/roles/GovernmentalInstitution.py"
 manager_main_script = "scenarios/one_on_one/manager_main.py"
 manager_node_implementation =  "scenarios/one_on_one/manager_node.py"
 m_container = Container(m_name,m_real_port, m_VM_port, m_ip, NETWORK, m_image)
@@ -71,6 +71,7 @@ for info in CONTAINER_INFO:
     m_container.copy(info, DATA_PATH)
 #Copy the manager node implementation to the container
 m_container.copy(manager_node_implementation, container_main_path+"/comms")
+m_container.copy(currently_tested_script, container_main_path)
 MANAGER_NODE_NAME = "manager_node"
 MANAGER_NODE_INFO = {"node_name": MANAGER_NODE_NAME, "IP": m_ip}
 save_node_info(MANAGER_NODE_INFO)
