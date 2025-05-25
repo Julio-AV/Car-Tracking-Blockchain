@@ -8,7 +8,7 @@ from blockchain.structure.transaction import Transaction
 from blockchain.structure.block import Block
  
 class DataHandler:
-    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict, blockchain: list, transaction_list: list):
+    def __init__(self, queue_from_node: multiprocessing.Queue, queue_to_node: multiprocessing.Queue, public_keys: dict, blockchain, transaction_list):
         """
         Connection handler is in charge of telling the connection_handler whether to broadcast a transaction or a block again, therefore to know whether my transaction has 
         been accepted by the network, I will have to receive my transaction again from the network.
@@ -89,8 +89,6 @@ class DataHandler:
                     #If the transaction is valid, add it to the transaction list and the queue to node
                     print(f"Accepted transaction {transaction}")
                     self.transaction_list.append(transaction)
-                    for transaction in self.transaction_list:
-                        print(f"Transaction in the data handler: {transaction.timestamp}")
                     self.queue_to_node.put(transaction.serialize())
                 else:
                     print(f"Transaction {transaction} was not valid")
