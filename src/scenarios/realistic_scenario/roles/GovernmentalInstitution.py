@@ -31,13 +31,14 @@ class GovernmentalInstitution(Node):
             time.sleep(0.2)
         # Now we generate the first block with the initial transactions
         print("Generating initial block with vehicle registrations...")
-        initial_block = Block("genesis_block", 0, self.data_handler.transaction_list, self.name)
+        initial_block = Block("0", 0, list(self.data_handler.transaction_list), self.name)
         initial_block.prepare_block(self.private_key)
         serialized_initial_block = initial_block.serialize()
         self.queue_to_connectionHandler.put(serialized_initial_block)
         print("Initial block sent to connection handler")
         # Clear the local transaction pool
         self._clear_transaction_list()
+        time.sleep(1)  # Give time for the initial block to be processed
         while True:
             # Generate data to be sent to the network
             transaction = self._gen_data()
@@ -55,7 +56,7 @@ class GovernmentalInstitution(Node):
             if len(self.data_handler.transaction_list) >= 5:
                 print("Enough transactions to create a block, generating block...")
                 
-                block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), self.data_handler.transaction_list, self.name)
+                block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list), self.name)
                 block.prepare_block(self.private_key)
                 serialized_block = block.serialize()
                 self.queue_to_connectionHandler.put(serialized_block)
@@ -85,7 +86,7 @@ class GovernmentalInstitution(Node):
         else:
             # Get random vehicle ID with owner for transfer
             # Get random block
-            block_idx = random.randint(0, len(self.blockchain) - 1)
+            block_idx = random.randint(0, len(self.blockchain) - 1) if len(self.blockchain) > 0 else 0
             vehicle_id = None
             old_owner = None
             for tx in self.blockchain[block_idx].transactions:
