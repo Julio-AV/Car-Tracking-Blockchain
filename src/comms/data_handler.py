@@ -36,11 +36,15 @@ class DataHandler:
             received_data = self.queue_from_node.get()
             try: 
                 json_data = json.loads(received_data)
+                with open("logs.txt", "a") as logs_file:
+                    logs_file.write(json.dumps(json_data, indent=4) + "\n")
             except json.JSONDecodeError:
                 print("Data received was not in JSON format")
                 continue
-            if "header" in json_data and "transactions" in json_data.keys():
+            if "header" in json_data.keys() and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
+                with open("logs.txt", "a") as logs_file:
+                    logs_file.write("Block was received\n")
                 block = TransactionFactory.create_block(json_data)
                 if block is None: 
                     print("Block was discaraded")
@@ -66,7 +70,7 @@ class DataHandler:
             else:
                 transaction = TransactionFactory.create_transaction(json_data)
                 
-                with open("mi_archivo.txt", "a") as archivo:
+                with open("logs.txt", "a") as archivo:
                     archivo.write("Data was a transaction\n") 
                 if transaction is None:
                     print("Transaction was discaraded")
@@ -80,7 +84,7 @@ class DataHandler:
                 try:
                     
                     is_valid = transaction.validate(self.public_keys[transaction.emitter], self.blockchain)
-                    with open("mi_archivo.txt", "a") as archivo:
+                    with open("logs.txt", "a") as archivo:
                         archivo.write(f"is transaction valid? {is_valid}\n") 
                 except KeyError:
                     print(f"Transaction {transaction.transaction_hash} was not valid, emitter {transaction.emitter} not found")

@@ -34,7 +34,7 @@ class ConnectionHandler:
                 del self.open_connections[IP]
 
     def accept_connection(self) -> Union[str, int]:
-        with open("mi_archivo.txt", "a") as archivo:
+        with open("logs.txt", "a") as archivo:
                     archivo.write("Waiting to accept connection...\n")  # Escribir una línea
         client_socket, client_address = self.server_socket.accept()
         client_address: str = client_address[0] #We only need the IP
@@ -44,7 +44,7 @@ class ConnectionHandler:
             else:
                 self.open_connections[client_address] = client_socket
                 
-                with open("mi_archivo.txt", "a") as archivo:
+                with open("logs.txt", "a") as archivo:
                     archivo.write(f"Connection accepted with {client_address}!\n")  # Escribir una línea
                 return client_address
             print(f"connection stablished with {client_address}")
@@ -94,7 +94,7 @@ class ConnectionHandler:
             if data:
                 #print(f"data received: {data.decode('utf-8')}")
                 
-                with open("mi_archivo.txt", "a") as archivo:
+                with open("logs.txt", "a") as archivo:
                     archivo.write("Data received!\n") 
                 self.queue_to_node.put(data)   #No need to decode the data since our data_handler will do it
             else:
