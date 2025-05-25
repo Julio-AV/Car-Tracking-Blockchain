@@ -86,7 +86,7 @@ class GovernmentalInstitution(Node):
         else:
             # Get random vehicle ID with owner for transfer
             # Get random block
-            block_idx = random.randint(0, len(self.blockchain) - 1) if len(self.blockchain) > 0 else 0
+            block_idx = random.randint(0, len(self.blockchain) - 1) if len(self.blockchain) > 0 else 0 # Defensive programming, we should always have at least the genesis block
             vehicle_id = None
             old_owner = None
             for tx in self.blockchain[block_idx].transactions:
