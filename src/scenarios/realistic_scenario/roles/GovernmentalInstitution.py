@@ -46,6 +46,27 @@ class GovernmentalInstitution(Node):
         # Clear the local transaction pool
         self._clear_transaction_list()
         time.sleep(1)  # Give time for the initial block to be processed
+
+        # Now we will create enough new cars to fill the blockchain
+        print("Populating blockchain with new vehicle registrations")
+        N = 3  # Number of blocks to create
+        # Create N new blocks with 5 new vehicles each
+        for _ in range(N):
+            # Create 5 transactions 
+            for _ in range(5):
+                transaction = self._gen_data("new_vehicle")
+                if transaction is not None:
+                    transaction.prepare_transaction(self.private_key)
+                    serialized_transaction = transaction.serialize()
+                    self.queue_to_connectionHandler.put(serialized_transaction)
+                time.sleep(0.2)
+            block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list), self.name)
+            block.prepare_block(self.private_key)
+            serialized_block = block.serialize()
+            self.queue_to_connectionHandler.put(serialized_block)
+            self._clear_transaction_list()
+
+        # Now we simulate the realistic scenario where the governmental institution generates any kind of transaction
         while True:
             # Generate data to be sent to the network
             transaction = self._gen_data()
