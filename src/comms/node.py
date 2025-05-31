@@ -24,8 +24,9 @@ class Node:
         self.queue_from_dataHandler = multiprocessing.Queue() #Queue between node and dataHandler (Node is the producer, and dataHandler is the consumer)
         self.process_manager = multiprocessing.Manager() #Manager to share data between processes
         self.transaction_list = self.process_manager.list() #List of transactions, this will be shared between node and data handler
+        self.transaction_list_lock = self.process_manager.Lock() #Lock to synchronize access to the transaction list
         self.blockchain = self.process_manager.list() #Blockchain, this will be shared between node and data handler
-        self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain, self.transaction_list)
+        self.data_handler = DataHandler(self.queue_to_dataHandler, self.queue_from_dataHandler, self.public_keys, self.blockchain, self.transaction_list, self.transaction_list_lock)
         print(f"Node {self.name} started successfully")
     
     def send(self):
@@ -68,4 +69,5 @@ class Node:
         """
         Clear the transaction list, this is used to clear the transaction list after a block is created
         """
+        
         self.transaction_list[:] = []

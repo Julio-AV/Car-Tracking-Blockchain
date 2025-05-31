@@ -59,16 +59,18 @@ class GovernmentalInstitution(Node):
             time.sleep(random.uniform(4, 6))
 
             #Check if we have enough transactions to create a block
-            if len(self.data_handler.transaction_list) >= 5:
-                print("Enough transactions to create a block, generating block...")
-                
-                block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list), self.name)
-                block.prepare_block(self.private_key)
-                serialized_block = block.serialize()
-                self.queue_to_connectionHandler.put(serialized_block)
-                print("Block sent to connection handler")
-                # Clear the local transaction pool
-                self._clear_transaction_list()
+            with self.transaction_list_lock:
+                # We use the lock to avoid clearing new transactions received on the data handler
+                if len(self.data_handler.transaction_list) >= 5:
+                    print("Enough transactions to create a block, generating block...")
+                    
+                    block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list), self.name)
+                    block.prepare_block(self.private_key)
+                    serialized_block = block.serialize()
+                    self.queue_to_connectionHandler.put(serialized_block)
+                    print("Block sent to connection handler")
+                    # Clear the local transaction pool
+                    self._clear_transaction_list()
 
     def _gen_data(self, type_of_data=None):
         """

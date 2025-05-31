@@ -28,8 +28,7 @@ Possible errors and debugging:
 Seguir el hilo:
     - Hacer que cuando el data_handler recibe uno bloque, borre del pool de transacciones locales las transacciones que están dentro del bloque (o no)
     - Hacer el escenario real:
-        - Hacer InsuranceCompany <----- aquí
-        - Hacer VIS
+        - Hacer VIS <------ 
         - Integrar todo
 
     
