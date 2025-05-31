@@ -1,34 +1,14 @@
-Connection handler:
-    - Test one to n script with more nodes
-    - Fix auto connection <-- Not needed, but it would be nice fixing it
-    - Add timeout for hosts that don't exist  
-
-- Complete simulations 
-
-
-Data handler:
-    - add transaction list clearing (pending)
-
-Node: 
-    - Keep in mind that when a block is broadcasted, transaction_list is flushed (or not, we'll see), but if it is flushed, we need 
-        to check on node whether a transaction was on the blockchain or not
-
-Simulations: 
-    Adapt and test current simulations with blockchain implemented simulation
-    Create semi-connected scenario
-    Create realistic scenario simulation
-
 Refactoring: 
     - Rename TransactionFactory to BlockchainFactory
 
 
-Possible errors and debugging:
-    Only 5 connections are accepted per socket
-
+Keep in mind:
+    - Only 5 connections are accepted per socket
+    - Only 1024 bytes are accepted per receival, therefore blocks cannot be longer than ~= 5 transactions
 Seguir el hilo:
     - Hacer que cuando el data_handler recibe uno bloque, borre del pool de transacciones locales las transacciones que están dentro del bloque (o no)
     - Hacer el escenario real:
-        - Hacer VIS <------ 
+        - Testear VIS y volver a testear lo de las GovernmentalInstitution porque has añadido lo de que se generen mas coches al principio
         - Integrar todo en realistic_scenario.py  y testear
         - Redactar el último escenario :)
 
