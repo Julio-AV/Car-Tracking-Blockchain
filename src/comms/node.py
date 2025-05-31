@@ -60,7 +60,7 @@ class Node:
         threading.Thread(target=self.receive).start()
         self.connection_handler.start()
         self.data_handler.start()
-        time.sleep(1) #Give time for the connection handler and data handler to start
+        time.sleep(2) #Give time for the connection handler and data handler to start
         threading.Thread(target=self.operate).start()
         thread_to_be_waited.join() #Wait for the thread to finish (infinite waiting)
 
