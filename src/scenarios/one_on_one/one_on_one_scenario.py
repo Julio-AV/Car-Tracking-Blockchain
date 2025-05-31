@@ -38,18 +38,19 @@ tc_real_port = 5500
 tc_VM_port = 5500
 NETWORK = "test_network"
 tc_image = "node_image"
-main_path = "scenarios/one_on_one/main.py"
+#main_path = "scenarios/one_on_one/main.py"
+main_path = "scenarios/realistic_scenario/roles/GovernmentalInstitution.py"
 create_network(tc_ip, NETWORK)
 test_container = Container(tc_name,tc_real_port, tc_VM_port, tc_ip, NETWORK, tc_image)
 test_container.create()
-test_container.copy(main_path, container_main_path)
+test_container.copy(main_path, container_main_path+"main.py")
 
 for dependency in DEPENDENCIES:
     test_container.copy(dependency, container_main_path)
 for info in CONTAINER_INFO:
     test_container.copy(info, DATA_PATH)
 
-
+print("Waking container...")
 test_container.wake()
 
 
@@ -59,7 +60,8 @@ m_name = "manager"
 m_real_port = 5501
 m_VM_port = 5500
 m_image = "manager_image"
-currently_tested_script = "scenarios/realistic_scenario/roles/GovernmentalInstitution.py"
+#currently_tested_script = "scenarios/realistic_scenario/roles/GovernmentalInstitution.py"
+currently_tested_script = "scenarios/realistic_scenario/roles/InsuranceCompany.py"
 manager_main_script = "scenarios/one_on_one/manager_main.py"
 manager_node_implementation =  "scenarios/one_on_one/manager_node.py"
 m_container = Container(m_name,m_real_port, m_VM_port, m_ip, NETWORK, m_image)

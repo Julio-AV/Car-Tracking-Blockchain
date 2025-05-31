@@ -17,18 +17,23 @@ class GovernmentalInstitution(Node):
         print("Welcome aboard, governmental institution!")
         # First we generate some vehicles, so the other nodes can operate with them
         print("Generating initial vehicle registrations...")
-        for _ in range(5):
-            transaction = self._gen_data("new_vehicle")
-            if transaction is not None:
-                transaction.prepare_transaction(self.private_key)
-                serialized_transaction = transaction.serialize()
-                self.queue_to_connectionHandler.put(serialized_transaction)
-                print(f"Initial vehicle registration {transaction.car_id} sent to connection handler")
-            else:
-                # We should never reach this since we are generating new vehicles and no None values should be returned
-                raise ValueError("Failed to generate initial vehicle registration transaction.")
-            # Sleep for a while before generating the next transaction
-            time.sleep(0.2)
+        while len(self.data_handler.transaction_list) == 0:
+            # Wait other nodes might not be connected yet, so we wait until we receive some transactions from the network
+            print("Waiting for initial vehicle registrations to be generated...")
+            for _ in range(5):
+                transaction = self._gen_data("new_vehicle")
+                if transaction is not None:
+                    transaction.prepare_transaction(self.private_key)
+                    serialized_transaction = transaction.serialize()
+                    self.queue_to_connectionHandler.put(serialized_transaction)
+                    print(f"Initial vehicle registration {transaction.car_id} sent to connection handler")
+                    with open("logs.txt", "a") as archivo:
+                        archivo.write("generating initial transaction...\n")  # Escribir una línea
+                else:
+                    # We should never reach this since we are generating new vehicles and no None values should be returned
+                    raise ValueError("Failed to generate initial vehicle registration transaction.")
+                # Sleep for a while before generating the next transaction
+                time.sleep(0.2)
         # Now we generate the first block with the initial transactions
         print("Generating initial block with vehicle registrations...")
         initial_block = Block("0", 0, list(self.data_handler.transaction_list), self.name)
@@ -50,7 +55,8 @@ class GovernmentalInstitution(Node):
             else:
                 print("No transaction generated, skipping...")
             # Sleep for a while before generating the next transaction
-            time.sleep(random.uniform(1, 3))
+            #Theoretically, each 10 seconds a new vehicle is transferred, but we will simulate this with a delay between 4 and 6 seconds
+            time.sleep(random.uniform(4, 6))
 
             #Check if we have enough transactions to create a block
             if len(self.data_handler.transaction_list) >= 5:
@@ -102,6 +108,9 @@ class GovernmentalInstitution(Node):
             # Now check if the vehicle still is owned by the old owner
             for block in reversed(self.blockchain):
                 for t in block.transactions:
+                    if not isinstance(t, CarTransaction):
+                        # Skip transactions that are not car transactions
+                        continue
                     if t.car_id == vehicle_id and t.new_owner == old_owner:
                         # Found the vehicle with the old owner
                         transaction = CarTransaction(
