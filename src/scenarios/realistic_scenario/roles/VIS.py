@@ -58,3 +58,7 @@ class VIS(Node):
             kilometers=str(new_kilometers)
         )
         return new_transaction
+    
+if __name__ == "__main__":
+    vis = VIS()
+    vis.start()
