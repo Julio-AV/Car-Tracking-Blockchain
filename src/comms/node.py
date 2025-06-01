@@ -65,9 +65,9 @@ class Node:
         threading.Thread(target=self.operate).start()
         thread_to_be_waited.join() #Wait for the thread to finish (infinite waiting)
 
-    def _clear_transaction_list(self):
+    def _clear_transaction_list(self, n_transactions_to_clear):
         """
         Clear the transaction list, this is used to clear the transaction list after a block is created
         """
         
-        self.transaction_list[:] = []
+        del self.transaction_list[:n_transactions_to_clear]

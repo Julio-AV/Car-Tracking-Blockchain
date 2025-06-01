@@ -11,6 +11,7 @@ class GovernmentalInstitution(Node):
     def __init__(self):
         super().__init__()
         print(f"Governmental Institution node will open connections with: {read_connections_from_file(self.IP)}")
+        self.TRANSACTIONS_PER_BLOCK = 4  # Number of transactions per block
 
     def operate(self):
         # Override the start method to add governmental institution specific functionality
@@ -22,7 +23,7 @@ class GovernmentalInstitution(Node):
             is_first_generation = False
             # Wait other nodes might not be connected yet, so we wait until we receive some transactions from the network
             print("Waiting for initial vehicle registrations to be generated...")
-            for _ in range(5):
+            for _ in range(self.TRANSACTIONS_PER_BLOCK):
                 transaction = self._gen_data("new_vehicle")
                 if transaction is not None:
                     transaction.prepare_transaction(self.private_key)
@@ -44,7 +45,7 @@ class GovernmentalInstitution(Node):
         self.queue_to_connectionHandler.put(serialized_initial_block)
         print("Initial block sent to connection handler")
         # Clear the local transaction pool
-        self._clear_transaction_list()
+        self._clear_transaction_list(self.TRANSACTIONS_PER_BLOCK)
         time.sleep(1)  # Give time for the initial block to be processed
 
         # Now we will create enough new cars to fill the blockchain
@@ -53,7 +54,7 @@ class GovernmentalInstitution(Node):
         # Create N new blocks with 5 new vehicles each
         for _ in range(N):
             # Create 5 transactions 
-            for _ in range(5):
+            for _ in range(self.TRANSACTIONS_PER_BLOCK):
                 transaction = self._gen_data("new_vehicle")
                 if transaction is not None:
                     transaction.prepare_transaction(self.private_key)
@@ -64,7 +65,7 @@ class GovernmentalInstitution(Node):
             block.prepare_block(self.private_key)
             serialized_block = block.serialize()
             self.queue_to_connectionHandler.put(serialized_block)
-            self._clear_transaction_list()
+            self._clear_transaction_list(self.TRANSACTIONS_PER_BLOCK)
 
         # Now we simulate the realistic scenario where the governmental institution generates any kind of transaction
         while True:
@@ -84,16 +85,16 @@ class GovernmentalInstitution(Node):
             #Check if we have enough transactions to create a block
             with self.transaction_list_lock:
                 # We use the lock to avoid clearing new transactions received on the data handler
-                if len(self.data_handler.transaction_list) >= 5:
+                if len(self.data_handler.transaction_list) >= self.TRANSACTIONS_PER_BLOCK:
                     print("Enough transactions to create a block, generating block...")
                     
-                    block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list), self.name)
+                    block = Block(self.blockchain[-1].header.block_hash, len(self.blockchain), list(self.data_handler.transaction_list)[:self.TRANSACTIONS_PER_BLOCK], self.name)
                     block.prepare_block(self.private_key)
                     serialized_block = block.serialize()
                     self.queue_to_connectionHandler.put(serialized_block)
                     print("Block sent to connection handler")
                     # Clear the local transaction pool
-                    self._clear_transaction_list()
+                    self._clear_transaction_list(self.TRANSACTIONS_PER_BLOCK)
 
     def _gen_data(self, type_of_data=None):
         """
