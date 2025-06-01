@@ -5,6 +5,7 @@ import queue
 import logging
 from typing import Union
 from utils.IP_file_handler import read_connections_from_file
+import struct
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 class ConnectionHandler:
     def __init__(self, IP: str ,port: int, queue_to_node: queue.Queue, queue_from_node: queue.Queue):
@@ -89,17 +90,28 @@ class ConnectionHandler:
         This function listens to a socket once
         """
         client_socket = self.open_connections[client_ip]
+
+        def recv_exact(n):
+            data = b''
+            while len(data) < n:
+                chunk = client_socket.recv(n - len(data))
+                if not chunk:
+                    raise ConnectionError("Connection closed before receiving full message")
+                data += chunk
+            return data
+
         try:
-            data = client_socket.recv(size)
-            if data:
-                #print(f"data received: {data.decode('utf-8')}")
-                
-                with open("logs.txt", "a") as archivo:
-                    archivo.write("Data received!\n") 
-                self.queue_to_node.put(data)   #No need to decode the data since our data_handler will do it
-            else:
-                print("Client closed connection.")
-                self.remove_connection(client_ip)
+            # Recibe 4 bytes que indican la longitud del mensaje
+            raw_length = recv_exact(4)
+            message_length = struct.unpack('!I', raw_length)[0]
+
+            # Ahora recibe el mensaje completo
+            message = recv_exact(message_length)
+
+            with open("logs.txt", "a") as archivo:
+                archivo.write(f"Received message of {message_length} bytes\n")
+
+            self.queue_to_node.put(message)
         except ConnectionResetError:
             print("Connection was restarted by client, closing socket...")
             self.remove_connection(client_ip)
@@ -150,8 +162,9 @@ class ConnectionHandler:
         Send a message to all open sockets
         """
         encoded_msg = self.encode_msg(msg)
+        length = struct.pack('!I', len(encoded_msg))  # 4 bytes en orden de red
         for soc in self.open_connections.values():
-            soc.sendall(encoded_msg)
+            soc.sendall(length + encoded_msg)
 
 
     def start(self):
