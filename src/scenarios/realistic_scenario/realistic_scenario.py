@@ -116,3 +116,15 @@ save_node_info(manager_node_info) #Save the node info for the manager container
 for dependency in DEPENDENCIES:
     m_container.copy(dependency, CONTAINER_MAIN_PATH)  # Copy dependencies to the manager container
 m_container.wake_and_control()  # Wake the manager container and control it
+
+
+#Cleanup
+input("\nPress enter to remove containers:")
+#Clear containers
+for container in container_list:
+    container.remove_container() 
+m_container.remove_container()
+#Clear data files
+clear_key_files()
+clear_node_files()
+delete_connections_file()
