@@ -69,6 +69,7 @@ class ManagerNode(Node):
                 print("Manipulating next transaction received...")
                 self.manipulate = True
                 data_to_manipulate = self.queue_from_connectionHandler.get()
+                self.manipulate = False
                 try: 
                     json_data = json.loads(data_to_manipulate)
                 except json.JSONDecodeError:
@@ -84,6 +85,7 @@ class ManagerNode(Node):
 
                 self.queue_to_connectionHandler.put(json.dumps(json_data))
                 print("Manipulated transaction sent to connection handler")
+                
             elif introduced_data == "4":
                 # print transactions in the data handler
                 print(f"Transactions in the data handler: {len(self.data_handler.transaction_list)}")
