@@ -11,7 +11,7 @@ class GovernmentalInstitution(Node):
     def __init__(self):
         super().__init__()
         print(f"Governmental Institution node will open connections with: {read_connections_from_file(self.IP)}")
-        self.TRANSACTIONS_PER_BLOCK = 4  # Number of transactions per block
+        self.TRANSACTIONS_PER_BLOCK = 5  # Number of transactions per block
 
     def operate(self):
         # Override the start method to add governmental institution specific functionality
