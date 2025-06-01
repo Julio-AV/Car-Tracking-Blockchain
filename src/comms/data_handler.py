@@ -40,7 +40,9 @@ class DataHandler:
                 with open("logs.txt", "a") as logs_file:
                     logs_file.write(json.dumps(json_data, indent=4) + "\n")
             except json.JSONDecodeError:
-                print("Data received was not in JSON format")
+                print(f"Data received was not in JSON format: {received_data}")
+                with open("logs.txt", "a") as logs_file:
+                    logs_file.write("The previous info was not in JSON format" + "\n")
                 continue
             if "header" in json_data.keys() and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
