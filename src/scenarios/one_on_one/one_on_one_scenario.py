@@ -64,7 +64,6 @@ m_image = "manager_image"
 #currently_tested_script = "scenarios/realistic_scenario/roles/InsuranceCompany.py"
 currently_tested_script = "scenarios/realistic_scenario/roles/VIS.py"
 manager_main_script = "scenarios/one_on_one/manager_main.py"
-manager_node_implementation =  "scenarios/one_on_one/manager_node.py"
 m_container = Container(m_name,m_real_port, m_VM_port, m_ip, NETWORK, m_image)
 m_container.create()
 m_container.copy(manager_main_script, container_main_path)
@@ -73,7 +72,6 @@ for dependency in DEPENDENCIES:
 for info in CONTAINER_INFO:
     m_container.copy(info, DATA_PATH)
 #Copy the manager node implementation to the container
-m_container.copy(manager_node_implementation, container_main_path+"/comms")
 m_container.copy(currently_tested_script, container_main_path)
 MANAGER_NODE_NAME = "manager_node"
 MANAGER_NODE_INFO = {"node_name": MANAGER_NODE_NAME, "IP": m_ip}
