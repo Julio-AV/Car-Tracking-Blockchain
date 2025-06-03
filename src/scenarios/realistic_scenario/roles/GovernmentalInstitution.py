@@ -30,8 +30,6 @@ class GovernmentalInstitution(Node):
                     serialized_transaction = transaction.serialize()
                     self.queue_to_connectionHandler.put(serialized_transaction)
                     print(f"Initial vehicle registration {transaction.car_id} sent to connection handler")
-                    with open("logs.txt", "a") as archivo:
-                        archivo.write("generating initial transaction...\n")  # Escribir una línea
                 else:
                     # We should never reach this since we are generating new vehicles and no None values should be returned
                     raise ValueError("Failed to generate initial vehicle registration transaction.")
@@ -75,7 +73,7 @@ class GovernmentalInstitution(Node):
                 transaction.prepare_transaction(self.private_key)
                 serialized_transaction = transaction.serialize()
                 self.queue_to_connectionHandler.put(serialized_transaction)
-                print(f"Transaction {transaction.car_id} sent to connection handler")
+                print(f"Transaction created and sent to connection handler")
             else:
                 print("No transaction generated, skipping...")
             # Sleep for a while before generating the next transaction

@@ -35,8 +35,6 @@ class ConnectionHandler:
                 del self.open_connections[IP]
 
     def accept_connection(self) -> Union[str, int]:
-        with open("logs.txt", "a") as archivo:
-                    archivo.write("Waiting to accept connection...\n")  # Escribir una línea
         client_socket, client_address = self.server_socket.accept()
         client_address: str = client_address[0] #We only need the IP
         with self.connections_lock:
@@ -108,8 +106,8 @@ class ConnectionHandler:
             # Ahora recibe el mensaje completo
             message = recv_exact(message_length)
 
-            with open("logs.txt", "a") as archivo:
-                archivo.write(f"Received message of {message_length} bytes\n")
+            # with open("logs.txt", "a") as archivo:
+            #     archivo.write(f"Received message of {message_length} bytes\n")
 
             self.queue_to_node.put(message)
         except ConnectionResetError:

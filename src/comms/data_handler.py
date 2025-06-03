@@ -31,23 +31,18 @@ class DataHandler:
     def consume_queue(self):
         """
         Main function of the data handler, it will consume the queue from the node, validate the transactions and decide whether to send them back to the network or not
-        TODO: Parse the information received from the network, if it contains a header field and a transactions field, it means it's a block
         """
         while True:
             received_data = self.queue_from_node.get()
             try: 
                 json_data = json.loads(received_data)
-                with open("logs.txt", "a") as logs_file:
-                    logs_file.write(json.dumps(json_data, indent=4) + "\n")
+                # with open("logs.txt", "a") as logs_file:
+                #     logs_file.write(json.dumps(json_data, indent=4) + "\n")
             except json.JSONDecodeError:
                 print(f"Data received was not in JSON format: {received_data}")
-                with open("logs.txt", "a") as logs_file:
-                    logs_file.write("The previous info was not in JSON format" + "\n")
                 continue
             if "header" in json_data.keys() and "transactions" in json_data.keys():
                 #if it contains a header field and a transactions field, it means it's a block
-                with open("logs.txt", "a") as logs_file:
-                    logs_file.write("Block was received\n")
                 block = TransactionFactory.create_block(json_data)
                 if block is None: 
                     print("Block was discaraded")
@@ -55,17 +50,18 @@ class DataHandler:
                     continue
                 elif block in self.blockchain:
                     #If block was already received, continue
-                    print("Block was already received")
+                    #print("Block was already received")
                     continue
-
                 with open("logs.txt", "a") as logs_file:
-                    logs_file.write("Validating block...\n")
+                    logs_file.write("Block was received\n")
                 #If block is not in the blockchain, validate it, and if it's valid, add it to the blockchain
                 is_valid_block = block.validate(self.public_keys, self.blockchain)
                 if is_valid_block:
                     self.blockchain.append(block)
                     self.queue_to_node.put(block.serialize())
                     print(f"Block: \n {str(block.header)} \n was added to the blockchain")
+                    with open("logs.txt", "a") as logs_file:
+                        logs_file.write("Block was accepted\n")
                 else:
                     with open("logs.txt", "a") as logs_file:
                         logs_file.write("Block was not valid\n") 
@@ -73,31 +69,32 @@ class DataHandler:
             else:
                 transaction = TransactionFactory.create_transaction(json_data)
                 
-                with open("logs.txt", "a") as archivo:
-                    archivo.write("Data was a transaction\n") 
                 if transaction is None:
                     print("Transaction was discaraded")
                     #If transaction could not be recovered, or was discarded, continue
                     continue
                 elif transaction in self.transaction_list:
-                    print("Transaction was already received")
+                    #print("Transaction was already received")
                     #If transaction was already received, continue
                     continue
                     
                 try:
-                    
+                    with open("logs.txt", "a") as logs_file:
+                        logs_file.write("Transaction was received\n")
                     is_valid = transaction.validate(self.public_keys[transaction.emitter], self.blockchain)
-                    with open("logs.txt", "a") as archivo:
-                        archivo.write(f"is transaction valid? {is_valid}\n") 
                 except KeyError:
                     print(f"Transaction {transaction.transaction_hash} was not valid, emitter {transaction.emitter} not found")
                     is_valid = False
                 if is_valid:
                     #If the transaction is valid, add it to the transaction list and the queue to node
+                    with open("logs.txt", "a") as logs_file:
+                        logs_file.write("Transaction was accepted\n")
                     print(f"Accepted transaction {transaction}")
                     with self.transaction_list_lock:
                         #We use a lock to synchronize access to the transaction list
                         self.transaction_list.append(transaction)
                     self.queue_to_node.put(transaction.serialize())
                 else:
+                    with open("logs.txt", "a") as logs_file:
+                        logs_file.write("Transaction was not valid\n")
                     print(f"Transaction {transaction} was not valid")

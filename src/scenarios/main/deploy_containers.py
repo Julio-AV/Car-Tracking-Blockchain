@@ -36,7 +36,6 @@ if __name__ == '__main__':
     is_valid_IP(starting_ip)
     create_network(starting_ip, network)
     container.run_container(False)
-    print("Corrió")
     time.sleep(10)
     #container.stop_container()
     container.remove_container()
