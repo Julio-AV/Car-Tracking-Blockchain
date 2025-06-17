@@ -22,6 +22,10 @@ class Transaction(ABC):
     @abstractmethod
     def _as_dict(self):
         """Return the transaction as a dictionary"""
+        
+    @abstractmethod
+    def pretty_print(self):
+        """Return a pretty print of the transaction"""
 
     @abstractmethod
     def _get_transaction_main_data(self):

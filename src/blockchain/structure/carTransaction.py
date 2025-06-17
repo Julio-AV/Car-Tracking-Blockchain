@@ -38,7 +38,9 @@ class CarTransaction(Transaction):
             "car_id": self.car_id
         }
     
-        
+    def pretty_print(self):
+        """Print the transaction in a human-readable format"""
+        return f"CarTransaction: {self.old_owner} to {self.new_owner} for car {self.car_id}"
 if __name__ == '__main__':
     #python3 -m blockchain.structure.carTransaction
     from cryptography.hazmat.primitives.asymmetric import rsa, padding

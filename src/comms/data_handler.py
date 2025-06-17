@@ -89,7 +89,7 @@ class DataHandler:
                     #If the transaction is valid, add it to the transaction list and the queue to node
                     with open("logs.txt", "a") as logs_file:
                         logs_file.write("Transaction was accepted\n")
-                    print(f"Accepted transaction {transaction}")
+                    print(f"Accepted transaction {transaction.pretty_print()}")
                     with self.transaction_list_lock:
                         #We use a lock to synchronize access to the transaction list
                         self.transaction_list.append(transaction)

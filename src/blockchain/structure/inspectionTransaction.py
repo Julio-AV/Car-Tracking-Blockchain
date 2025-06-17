@@ -29,7 +29,8 @@ class InspectionTransaction(Transaction):
             "car_id": self.car_id,
             "kilometers": self.kilometers
         }
-        
+    def pretty_print(self):
+        return f"InspectionTransaction: for car {self.car_id} with {self.kilometers} kilometers"
 if __name__ == '__main__':
     #python3 -m blockchain.structure.inspectionTransaction
     from cryptography.hazmat.primitives.asymmetric import rsa, padding
