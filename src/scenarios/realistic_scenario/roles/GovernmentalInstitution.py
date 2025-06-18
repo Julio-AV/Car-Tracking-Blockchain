@@ -17,6 +17,7 @@ class GovernmentalInstitution(Node):
         # Override the start method to add governmental institution specific functionality
         print("Welcome aboard, governmental institution!")
         # First we generate some vehicles, so the other nodes can operate with them
+        time.sleep(4)  # Give time for the connections to be established
         print("Generating initial vehicle registrations...") 
         is_first_generation = True # When we create varios governmental institution nodes, we want to generate the initial transactions even if other governmental institutions are already started
         while len(self.data_handler.transaction_list) == 0 or is_first_generation:
