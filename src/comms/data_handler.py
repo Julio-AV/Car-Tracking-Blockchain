@@ -59,7 +59,8 @@ class DataHandler:
                 if is_valid_block:
                     self.blockchain.append(block)
                     self.queue_to_node.put(block.serialize())
-                    print(f"Block: \n {str(block.header)} \n was added to the blockchain")
+                    print("Accepted block:")
+                    block.pretty_print()
                     with open("logs.txt", "a") as logs_file:
                         logs_file.write("Block was accepted\n")
                 else:

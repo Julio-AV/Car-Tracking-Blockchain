@@ -29,7 +29,7 @@ class GovernmentalInstitution(Node):
                     transaction.prepare_transaction(self.private_key)
                     serialized_transaction = transaction.serialize()
                     self.queue_to_connectionHandler.put(serialized_transaction)
-                    print(f"Initial vehicle registration {transaction.car_id} sent to connection handler")
+                    print(f"Initial vehicle registration {transaction.pretty_print()} sent to connection handler")
                 else:
                     # We should never reach this since we are generating new vehicles and no None values should be returned
                     raise ValueError("Failed to generate initial vehicle registration transaction.")

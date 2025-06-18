@@ -27,7 +27,7 @@ class VIS(Node):
                 transaction.prepare_transaction(self.private_key)
                 serialized_transaction = transaction.serialize()
                 self.queue_to_connectionHandler.put(serialized_transaction)
-                print(f"Transaction {transaction.car_id} sent to connection handler")
+                print(f"Transaction {transaction.pretty_print()} sent to connection handler")
             else:
                 print("Something went wrong, no transaction generated, skipping...")
             # Sleep for a while before generating the next transaction
