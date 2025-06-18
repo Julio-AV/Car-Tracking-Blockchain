@@ -42,7 +42,7 @@ class VIS(Node):
         for block in reversed(self.blockchain):
             for transaction in block.transactions:
                 if isinstance(transaction, InspectionTransaction) and transaction.car_id == vehicle_id:
-                    new_kilometers = int(transaction.kilometers) + random.randint(-15000, 50000)  # Random kilometers between 1000 and 200000
+                    new_kilometers = abs(int(transaction.kilometers) + random.randint(-15000, 50000))  # Random kilometers between 1000 and 200000
                     new_transaction = InspectionTransaction(
                         emitter=self.name,
                         car_id=transaction.car_id,
