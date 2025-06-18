@@ -16,8 +16,8 @@ from utils.IP_file_handler import generate_connected_network, write_connections_
         #Autonomous containers
 #------------------------------------------------
 N_GOV = 1 #Number of governmental institutions
-N_INSURANCE = 1 #Number of insurance companies
-N_VIS = 1 #Number of vehicle inspection stations
+N_INSURANCE = 2 #Number of insurance companies
+N_VIS = 3 #Number of vehicle inspection stations
 TC_BASE_IP = "192.168.5." #Base IP for the autonomous containers
 IP_OFFSET = 3 #Offset for the IPs of the autonomous containers
 TC_VM_PORT = 5500 
@@ -102,8 +102,9 @@ for i in range(len(IPs)-1):
     # Copy dependencies
     for dependency in DEPENDENCIES:
         container.copy(dependency, CONTAINER_MAIN_PATH)
-    container.wake()
     container_list.append(container)  # Add the container to the list
+for container in container_list:
+    container.wake()
 #---------------------------------
 #   Manager container
 #---------------------------------
