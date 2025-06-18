@@ -81,8 +81,9 @@ class Transaction(ABC):
     def validate_signature(self, public_key):
         """Validate the signature of the transaction"""
         try:
+            transaction_hash = self.calculate_hash()
             signature_bytes = bytes.fromhex(self.signature)
-            public_key.verify(signature_bytes, self.transaction_hash.encode(),
+            public_key.verify(signature_bytes, transaction_hash.encode(),
                                 padding.PSS(
                                     mgf=padding.MGF1(hashes.SHA256()), 
                                     salt_length=padding.PSS.MAX_LENGTH), 
